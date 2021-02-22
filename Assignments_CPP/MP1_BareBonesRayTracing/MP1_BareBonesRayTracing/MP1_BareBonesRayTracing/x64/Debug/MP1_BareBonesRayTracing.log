@@ -1,0 +1,24 @@
+﻿  Camera.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  Image.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Image.cpp(31,28): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Image.cpp(31,29): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Image.cpp(46,22): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Image.cpp(218,44): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Image.cpp(270,24): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+  LightSource.cpp
+  MP1_BareBonesRayTracing.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  Object.cpp
+  Plane.cpp
+  PointLightSource.cpp
+  Ray3D.cpp
+  SceneObject.cpp
+  Sphere.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Sphere.cpp(57,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  Triangle.cpp
+  Vec3D.cpp
+  World.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  Generating Code...
+  MP1_BareBonesRayTracing.vcxproj -> C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\x64\Debug\MP1_BareBonesRayTracing.exe
