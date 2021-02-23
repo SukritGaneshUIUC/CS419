@@ -1,6 +1,4 @@
-﻿  Camera.cpp
-C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
-  MP1_BareBonesRayTracing.cpp
+﻿  MP1_BareBonesRayTracing.cpp
 C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
   World.cpp
 C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\MP1_BareBonesRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data

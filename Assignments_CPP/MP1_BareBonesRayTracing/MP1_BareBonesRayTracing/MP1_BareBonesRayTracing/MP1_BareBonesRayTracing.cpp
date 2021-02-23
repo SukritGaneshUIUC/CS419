@@ -76,17 +76,18 @@ void image1_orthographic() {
 
     Camera camera;
     camera.setPosition({ 0,0,0 });
-    camera.setViewWindowPosition(Point3D(0, 0, -1));
+    camera.setViewWindowPosition(Point3D(0.5, 0, -1));
     camera.setUpVector(Vec3D(0, 1, 0));
     camera.setViewWindowRows(rows);
     camera.setViewWindowCols(cols);
     camera.setPixelSize(width / rows);
     camera.setProjectionType(ProjectionType::ORTHOGRAPHIC);
-    camera.setWorldPosition({ 0,0,0 });
+    camera.setWorldPosition({ -2.5,3,0 });
     world.setCamera(camera);
 
     Image backgroundImage{ rows, cols, ColorRGB(255, 219, 247) };
     world.setBackgroundImage(std::move(backgroundImage));
+    world.setAmbientLight(WHITE_COLOR * 0.2);
     
     // BUILD WORLD
     world.addSceneObject(std::shared_ptr<SceneObject>(new Plane({ 0,-2,0 }, { 0,1,0 }, BLUE_COLOR, BLUE_COLOR)));
@@ -155,17 +156,18 @@ void image3_perspective2() {
 
     Camera camera;
     camera.setPosition({ 0,0,0 });
-    camera.setViewWindowPosition(Point3D(0.1, 0, -1));
+    camera.setViewWindowPosition(Point3D(0.5, 0, -0.5));
     camera.setUpVector(Vec3D(0, 1, 0));
     camera.setViewWindowRows(rows);
     camera.setViewWindowCols(cols);
     camera.setPixelSize(width / rows);
     camera.setProjectionType(ProjectionType::PERSPECTIVE);
-    camera.setWorldPosition({ -1,0,0 });
+    camera.setWorldPosition({ -5,0,0 });
     world.setCamera(camera);
 
     Image backgroundImage{ rows, cols, ColorRGB(255, 219, 247) };
     world.setBackgroundImage(std::move(backgroundImage));
+    world.setAmbientLight(WHITE_COLOR * 0.2);
 
     // BUILD WORLD
     world.addSceneObject(std::shared_ptr<SceneObject>(new Plane({ 0,-2,0 }, { 0,1,0 }, BLUE_COLOR, BLUE_COLOR)));
@@ -205,6 +207,7 @@ void image4_noantialiasing() {
 
     Image backgroundImage{ rows, cols, ColorRGB(255, 219, 247) };
     world.setBackgroundImage(std::move(backgroundImage));
+    world.setAmbientLight(WHITE_COLOR * 0.2);
 
     // BUILD WORLD
     world.addSceneObject(std::shared_ptr<SceneObject>(new Plane({ 0,-2,0 }, { 0,1,0 }, BLUE_COLOR, BLUE_COLOR)));
@@ -244,6 +247,7 @@ void image5_antialiasing() {
 
     Image backgroundImage{ rows, cols, ColorRGB(255, 219, 247) };
     world.setBackgroundImage(std::move(backgroundImage));
+    world.setAmbientLight(WHITE_COLOR * 0.2);
 
     // BUILD WORLD
     world.addSceneObject(std::shared_ptr<SceneObject>(new Plane({ 0,-2,0 }, { 0,1,0 }, BLUE_COLOR, BLUE_COLOR)));
