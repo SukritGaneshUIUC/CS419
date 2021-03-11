@@ -1,0 +1,9 @@
+﻿  MP2_AcceleratedRayTracing.cpp
+  The contents of <filesystem> are available only with C++17 or later.
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(174,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(212,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(263,37): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(283,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing.cpp(138,26): warning C4018: '<': signed/unsigned mismatch
+  MP2_AcceleratedRayTracing.vcxproj -> C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\Debug\MP2_AcceleratedRayTracing.exe

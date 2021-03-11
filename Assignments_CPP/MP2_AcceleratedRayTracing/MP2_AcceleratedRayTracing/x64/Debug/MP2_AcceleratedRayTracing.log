@@ -1,0 +1,17 @@
+﻿  BVHNode.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(266,37): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(278,24): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(278,33): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(278,69): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(278,78): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(286,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  World.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(266,37): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(278,24): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(278,33): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(278,69): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(278,78): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Arithmetic.h(286,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\MP2_AcceleratedRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  Generating Code...
+  MP2_AcceleratedRayTracing.vcxproj -> C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP2_AcceleratedRayTracing\x64\Debug\MP2_AcceleratedRayTracing.exe
