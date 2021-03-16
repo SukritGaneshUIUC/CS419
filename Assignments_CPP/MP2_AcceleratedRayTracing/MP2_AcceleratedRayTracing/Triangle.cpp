@@ -62,35 +62,35 @@ void Triangle::setNormal(const Vec3D& normalVector)
 	this->normalVector = normalVector;
 }
 
-///*
-//* Find the intersection points, if any, with a Ray3D
-//*
-//* @param ray The potentially intersecting
-//* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
-//*
-//* @return The number of intersection points
-//*/
-//int Triangle::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
-//{
-//	double intT;
-//	Point3D intPoint;
-//	bool intersected = Arithmetic::moller_trumbore(ray.getStart(), ray.getDirection(), vertices, intT, intPoint);
-//	if (intersected) {
-//		intTs.push_back(intT);
-//		return 1;
-//	}
-//	return 0;
-//
-//	//double t;
-//	//double u;
-//	//double v;
-//	//bool intersected = Arithmetic::ray_intersect_triangle(ray.getStart(), ray.getDirection().get_normalized(2), vertices[0], vertices[1], vertices[2], t, u, v);
-//	//if (intersected) {
-//	//	intPoints.push_back(ray.pos(t));
-//	//	return 1;
-//	//}
-//	//return 0;
-//}
+/*
+* Find the intersection points, if any, with a Ray3D
+*
+* @param ray The potentially intersecting
+* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
+*
+* @return The number of intersection points
+*/
+int Triangle::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
+{
+	double intT;
+	Point3D intPoint;
+	bool intersected = Arithmetic::moller_trumbore(ray.getStart(), ray.getDirection(), vertices, intT, intPoint);
+	if (intersected) {
+		intTs.push_back(intT);
+		return 1;
+	}
+	return 0;
+
+	//double t;
+	//double u;
+	//double v;
+	//bool intersected = Arithmetic::ray_intersect_triangle(ray.getStart(), ray.getDirection().get_normalized(2), vertices[0], vertices[1], vertices[2], t, u, v);
+	//if (intersected) {
+	//	intPoints.push_back(ray.pos(t));
+	//	return 1;
+	//}
+	//return 0;
+}
 
 /*
 * Find the intersection points, if any, with a Ray3D

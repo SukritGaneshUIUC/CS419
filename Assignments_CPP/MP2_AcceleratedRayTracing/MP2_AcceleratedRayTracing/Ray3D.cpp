@@ -19,7 +19,9 @@ Ray3D::Ray3D(const Point3D& s, const Vec3D& d) : start(s), direction(d) {}
 * @param s The origin of the Ray3D
 * @param d The direction vector of the Ray3D
 */
-Ray3D::Ray3D(const double(&s)[3], const double(&d)[3]) : start(Point3D{ s }), direction(Vec3D{ d }) {}
+Ray3D::Ray3D(const double(&s)[3], const double(&d)[3]) : start(Point3D{ s }), direction(Vec3D{ d }) {
+	direction.normalize();
+}
 
 /*
 * Copy Constructor for Ray3D

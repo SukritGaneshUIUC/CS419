@@ -26,10 +26,22 @@ const ColorRGB& LightSource::getSpecular() const
     return specular;
 }
 
+const double& LightSource::getAlpha() const
+{
+    // Nothing here
+    return 0;
+}
+
 /*
 * @return The brightness of the LightSource
 */
 const double& LightSource::getBrightness() const
 {
     return brightness;
+}
+
+const ColorRGB& LightSource::getAmbient() const
+{
+    // Nothing here
+    return WHITE_COLOR;
 }

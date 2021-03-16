@@ -21,6 +21,8 @@ public:
 
     bool hit(const Ray3D& r, double t_min, double t_max) const;
     //inline bool hit(const Ray3D& r, double t_min, double t_max) const
+
+    std::string toString() const;
 };
 
 using AABB = AxisAlignedBoundingBox;

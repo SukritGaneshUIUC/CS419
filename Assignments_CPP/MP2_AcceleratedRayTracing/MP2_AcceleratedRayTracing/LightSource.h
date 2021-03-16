@@ -15,14 +15,18 @@ public:
     LightSource(const ObjectType& type, const ColorRGB& diffuse = DEFAULT_COLOR, const ColorRGB& specular = DEFAULT_COLOR, const double& brightness = DEFAULT_BRIGHTNESS);
 
     const double& getBrightness() const;
+    const ColorRGB& getAmbient() const;
     const ColorRGB& getDiffuse() const;
     const ColorRGB& getSpecular() const;
+    const double& getAlpha() const;
 
     // IMPLEMENT ON ALL SUBCLASSES
-    //virtual int intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const = 0;
+    virtual int intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const = 0;
     virtual int intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<Point3D>& intPoints) const = 0;
-    virtual Point3D getLightPoint() const = 0;    // return a point on the light source (randomly or stratified sample using static variable), useful for ray tracing
+    virtual Vec3D normal(const Point3D& intersection) const = 0;
     virtual bool generateBoundingBox(AABB3D& bb) const = 0;
+
+    virtual Point3D getLightPoint() const = 0;    // return a point on the light source (randomly or stratified sample using static variable), useful for ray tracing
 
 };
 

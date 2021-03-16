@@ -28,25 +28,25 @@ Vec3D Plane::getNormal() const
 	return normal_vector;
 }
 
-///*
-//* Find the intersection points, if any, with a Ray3D
-//*
-//* @param ray The potentially intersecting
-//* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
-//*
-//* @return The number of intersection points
-//*/
-//int Plane::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
-//{
-//	double intT;
-//	Point3D intPoint;
-//	bool intersected = Arithmetic::ray_intersect_plane(point, normal_vector, ray, intT, intPoint);
-//	if (intersected) {
-//		intTs.push_back(intT);
-//		return 1;
-//	}
-//	return 0;
-//}
+/*
+* Find the intersection points, if any, with a Ray3D
+*
+* @param ray The potentially intersecting
+* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
+*
+* @return The number of intersection points
+*/
+int Plane::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
+{
+	double intT;
+	Point3D intPoint;
+	bool intersected = Arithmetic::ray_intersect_plane(point, normal_vector, ray, intT, intPoint);
+	if (intersected) {
+		intTs.push_back(intT);
+		return 1;
+	}
+	return 0;
+}
 
 /*
 * Find the intersection points, if any, with a Ray3D

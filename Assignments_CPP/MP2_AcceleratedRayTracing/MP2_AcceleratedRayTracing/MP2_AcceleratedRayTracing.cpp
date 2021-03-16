@@ -108,6 +108,46 @@ void perspectiveTest() {
     im.writeToFile(filepath);
 }
 
+void singleSphereTest(int radius = 1) {
+    size_t sphereCount = 1;
+
+    // SETUP WORLD
+    World world;
+    int rows = 500;
+    int cols = 500;
+    double width = 3.0;  // higher value = zoom out, lower value = zoom in
+
+    Camera camera;
+    camera.setPosition({ 0,0,0 });
+    camera.setViewWindowPosition(Point3D(0, 0, -1));
+    camera.setUpVector(Vec3D(0, 1, 0));
+    camera.setViewWindowRows(rows);
+    camera.setViewWindowCols(cols);
+    camera.setPixelSize(width / rows);
+    camera.setProjectionType(ProjectionType::PERSPECTIVE);
+    camera.setWorldPosition({ 0,0,0 });
+    world.setCamera(camera);
+
+    Image backgroundImage{ rows, cols, BLACK_COLOR };
+    world.setBackgroundImage(std::move(backgroundImage));
+    world.setAmbientLight(WHITE_COLOR * 0.2);
+
+    // BUILD WORLD
+    Sphere* s = new Sphere(Point3D(-1, -1, -5), radius, Arithmetic::randomVec3D(BLACK_COLOR, WHITE_COLOR), Arithmetic::randomVec3D(BLACK_COLOR, WHITE_COLOR), Arithmetic::randomVec3D(BLACK_COLOR, WHITE_COLOR));
+    world.addSceneObject(std::shared_ptr<SceneObject>(s));
+
+    world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-3, 20, 8), WHITE_COLOR, WHITE_COLOR)));
+
+    world.addRenderOption(RenderOption::BVH);
+
+    // RENDER
+    std::cout << "Rendering ...\n" << std::endl;
+    Image im{ world.render() };
+    std::cout << "\nDone rendering ..." << std::endl;
+    std::string filepath = "spheres1.ppm";
+    im.writeToFile(filepath);
+}
+
 void sphereTest(int sphereCount=10) {
     // SETUP WORLD
     World world;
@@ -137,25 +177,24 @@ void sphereTest(int sphereCount=10) {
 
     for (size_t i = 0; i < sphereCount; i++) {
         Point3D randomCenter = Arithmetic::randomVec3D(lowerLimit, upperLimit);
-        std::cout << randomCenter.toString() << std::endl;
         Sphere* s = new Sphere(randomCenter, sphereRadius, Arithmetic::randomVec3D(BLACK_COLOR, WHITE_COLOR), Arithmetic::randomVec3D(BLACK_COLOR, WHITE_COLOR), Arithmetic::randomVec3D(BLACK_COLOR, WHITE_COLOR));
         world.addSceneObject(std::shared_ptr<SceneObject>(s));
     }
 
     world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-3, 20, 8), WHITE_COLOR, WHITE_COLOR)));
 
-    std::cout << world.getSceneObjects().size() << std::endl;
+    world.addRenderOption(RenderOption::BVH);
 
     // RENDER
-    std::cout << "Rendering ..." << std::endl;
+    std::cout << "Rendering ...\n" << std::endl;
     Image im{ world.render() };
-    std::cout << "Done rendering ..." << std::endl;
+    std::cout << "\nDone rendering ..." << std::endl;
     std::string filepath = "spheres" + std::to_string(sphereCount) +".ppm";
     im.writeToFile(filepath);
 }
 
 //void objTest(const std::string& objFilepath) {
-//    // SETUP WORLD
+//    // SETUP WORLD    
 //    World world;
 //    int rows = 500;
 //    int cols = 500;
@@ -195,10 +234,24 @@ void sphereTest(int sphereCount=10) {
 //    im.writeToFile(filepath);
 //}
 
+void intTest() {
+    std::vector<Point3D> intPoints;
+    AABB3D bb(Point3D(-5, -5, -5), Point3D(5, 5, -10));
+    Ray3D rr(Point3D(0, 0, 0), Vec3D(0, 0, -1));
+    bool hh = bb.hit(rr, 0, 10000);
+    std::cout << hh << std::endl;
+}
+
 int main()
 {
     //testBench();
-    perspectiveTest();
-    //sphereTest(10);
+    //perspectiveTest();
+    //singleSphereTest(3);
+
+    sphereTest(5);
+    //sphereTest(25);
+
     //objTest("teapotObj.txt");
+
+
 }

@@ -23,7 +23,7 @@ public:
 
     void setNormal(const Vec3D& normalVector);
 
-    //int intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const;
+    int intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const;
     int intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<Point3D>& intPoint) const;
     Vec3D normal(const Point3D& intersection) const;
     bool generateBoundingBox(AABB3D& bb) const;

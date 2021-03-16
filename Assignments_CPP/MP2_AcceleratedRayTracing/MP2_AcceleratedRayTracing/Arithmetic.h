@@ -18,7 +18,8 @@
 namespace Arithmetic {
     const double EPSILON = 0.00001;
     static std::default_random_engine generator;
-    static std::uniform_real_distribution<double> distribution(0, 1);
+    static std::uniform_real_distribution<double> doubleDistribution(0, 1);
+    //static std::uniform_real_distribution<int> intDistribution(0, 1);
 
     static int quadratic_solver(const double& a, const double& b, const double& c, std::vector<double>& sols) {
         double discriminant = b * b - 4.0 * a * c;
@@ -275,7 +276,7 @@ namespace Arithmetic {
         Vec3D randomVec;
 
         for (size_t i = 0; i < 3; i++) {
-            randomVec[i] = min[i] + distribution(generator) * (max[i] - min[i]);
+            randomVec[i] = min[i] + doubleDistribution(generator) * (max[i] - min[i]);
         }
 
         return randomVec;
@@ -283,7 +284,7 @@ namespace Arithmetic {
 
     inline int random_double(double min, double max) {
         // Returns a random double in [min,max].
-        return min + distribution(generator) * (max - min);
+        return min + doubleDistribution(generator) * (max - min);
     }
 
     inline int random_int(int min, int max) {

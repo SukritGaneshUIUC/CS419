@@ -18,23 +18,24 @@ const Point3D& PointLightSource::getPosition() const
     return position;
 }
 
-///*
-//* Find the intersection points, if any, with a Ray3D
-//*
-//* @param ray The potentially intersecting
-//* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
-//*
-//* @return The number of intersection points
-//*/
-//int PointLightSource::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
-//{
-//    double intT = 0;
-//    if (Arithmetic::ray_intersect_point(ray, position, intT)) {
-//        intTs.push_back(intT);
-//        return 1;
-//    }
-//    return 0;
-//}
+/*
+* Find the intersection points, if any, with a Ray3D
+*
+* @param ray The potentially intersecting
+* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
+*
+* @return The number of intersection points
+*/
+int PointLightSource::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
+{
+    double intT = 0;
+    Point3D intPoint;
+    if (Arithmetic::ray_intersect_point(ray, position, intT, intPoint)) {
+        intTs.push_back(intT);
+        return 1;
+    }
+    return 0;
+}
 
 /*
 * Find the intersection points, if any, with a Ray3D
@@ -53,6 +54,11 @@ int PointLightSource::intersection(const Ray3D& ray, const double& t_min, const 
         return 1;
     }
     return 0;
+}
+
+Vec3D PointLightSource::normal(const Point3D& intersection) const
+{
+    return Vec3D{ 0,0,1 };
 }
 
 /*

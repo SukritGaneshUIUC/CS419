@@ -1,4 +1,5 @@
 #include "World.h"
+#include "BVHNode.h"
 
 /*
 * Default constructor for World
@@ -96,6 +97,14 @@ bool World::antiAliasing() const
 }
 
 /*
+* @return bool Checks whether the user selected BVH as a RenderOption
+*/
+bool World::BVH() const
+{
+	return std::find(renderOptions.begin(), renderOptions.end(), RenderOption::BVH) != renderOptions.end();
+}
+
+/*
 * @return The background Image of the World
 */
 const Image& World::getBackgroundImage()
@@ -127,6 +136,14 @@ const ColorRGB& World::getAmbientLight()
 	return ambientLight;
 }
 
+/*
+* Generates a bounding box which surrounds two given bounding boxes
+*
+* @param box0 The first bounding box
+* @param box1 The second bounding box
+*
+* @return A bounding box surrounding box0 and box1
+*/
 AABB3D World::surroundingBox(const AABB3D& box0, const AABB3D& box1) const
 {
 	Point3D small(fmin(box0.min().x(), box1.min().x()),
@@ -140,6 +157,14 @@ AABB3D World::surroundingBox(const AABB3D& box0, const AABB3D& box1) const
 	return AABB3D(small, big);
 }
 
+/*
+* Generates a bounding box which surrounds ALL given objects
+*
+* @param objects The list of Objects.
+* @param bb The bounding box surrounding all Objects. Modified by function.
+*
+* @return A bounding box surrounding all Objects in objects.
+*/
 bool World::surroundingBox(const std::vector<std::shared_ptr<Object>>& objects, AABB3D& bb) const
 {
 	// No bounding box if list is empty, return false
@@ -167,6 +192,102 @@ bool World::surroundingBox(const std::vector<std::shared_ptr<Object>>& objects, 
 	return true;
 }
 
+bool World::bvhIntersectionHelper(const BVHNode& currNode, const Ray3D& firstRay, std::vector<std::shared_ptr<SceneObject>>& intersectedObjects, std::vector<Point3D>& intersectionPoints) {
+	std::vector<Point3D> intPoints;
+	//std::cout << "goth" << std::endl;
+
+	// Break if current node isn't hit
+	if (!currNode.intersection(firstRay, 0, MAX_T, intPoints)) {
+		//AABB3D bb;
+		//currNode.generateBoundingBox(bb);
+		//std::cout << bb.toString() << std::endl;
+		//std::cout << "no int in node" << std::endl;
+		return false;
+	}
+	//std::cout << "int" << std::endl;
+	intPoints.clear();
+
+	// If current node is leaf, perform ray tracing intersection on node's objects
+	if (currNode.isLeaf()) {
+		std::shared_ptr<SceneObject> left = std::dynamic_pointer_cast<SceneObject>(currNode.getLeft());
+		std::shared_ptr<SceneObject> right = std::dynamic_pointer_cast<SceneObject>(currNode.getLeft());
+		bool intLeft = false;
+		bool intRight = false;
+
+		// check left leaf intersection
+		intLeft = left->intersection(firstRay, 0, MAX_T, intPoints);
+		if (intLeft) {
+			size_t leftIntIdx = Arithmetic::closestPoint(firstRay.getStart(), intPoints);
+			intersectedObjects.push_back(left);
+			intersectionPoints.push_back(intPoints[leftIntIdx]);
+			intPoints.clear();
+		}
+
+		// Return early if left and right point to same SceneObject
+		if (left.get() == right.get()) {
+			return intLeft;
+		}
+
+		// check right leaf intersection
+		intRight = right->intersection(firstRay, 0, MAX_T, intPoints);
+		if (intRight) {
+			size_t rightIntIdx = Arithmetic::closestPoint(firstRay.getStart(), intPoints);
+			intersectedObjects.push_back(right);
+			intersectionPoints.push_back(intPoints[rightIntIdx]);
+		}
+		
+		return intLeft || intRight;
+	}
+	//std::cout << "notleaf" << std::endl;
+
+	// Otherwise, check left and right nodes
+	const BVHNode left = *(std::dynamic_pointer_cast<BVHNode>(currNode.getLeft()));
+	const BVHNode right = *(std::dynamic_pointer_cast<BVHNode>(currNode.getRight()));
+
+	bool intLeft = false;
+	bool intRight = false;
+
+	intLeft = bvhIntersectionHelper(left, firstRay, intersectedObjects, intersectionPoints);
+	intRight = bvhIntersectionHelper(right, firstRay, intersectedObjects, intersectionPoints);
+
+	return intLeft || intRight;
+}
+
+bool World::bvhIntersection(const Ray3D& firstRay, std::shared_ptr<SceneObject>& intersectedObject, Point3D& intersectionPoint)
+{
+	// Get all intersections by traversing BVH Tree
+	std::vector<std::shared_ptr<SceneObject>> intersectedObjects;
+	std::vector<Point3D> intersectionPoints;
+	//std::cout << "starting inthelper" << std::endl;
+	bool intersected = bvhIntersectionHelper(root, firstRay, intersectedObjects, intersectionPoints);
+	//std::cout << "ending inthelper" << std::endl;
+	if (intersectedObjects.size() == 0) {
+		//std::cout << firstRay.getDirection().toString() << " noint" << std::endl;
+		return false;
+	}
+
+	//std::cout << "here" << std::endl;
+
+	// Find closest object
+	bool first = true;
+	double closestDist = 0;
+
+	for (int i = 0; i < intersectedObjects.size(); i++) {
+		const Point3D& currIntPoint = intersectionPoints[i];
+		double currDist = firstRay.getStart().distanceTo(currIntPoint);
+		if (first || currDist < closestDist) {
+			closestDist = currDist;
+			intersectedObject = intersectedObjects[i];
+			intersectionPoint = currIntPoint;
+			first = false;
+		}
+	}
+
+	//std::cout << "done" << std::endl;
+
+	return true;
+}
+
 /*
 * Shoots a ray from the origin through the view plane, then determines which objects it hits.
 * In a more advanced implementation, this ray will "reflect off" and "pass through" surfaces, meaning there will be multiple intersection points.
@@ -176,12 +297,12 @@ bool World::surroundingBox(const std::vector<std::shared_ptr<Object>>& objects, 
 * @param xOffset The horizontal offset of the ray destination.
 * @param yOffset The vertical offset of the ray destination.
 * @param firstRayStart A Point3D which will hold the origin of the primary ray. Modified by function.
-* @param intersectedObjectIdx An integer which will hold the index of the closest intersected object (if any). Modified by function.
+* @param intersectedObject The closest intersected object (if any). Modified by function.
 * @param intersectionPoint A Point3D which will hold the intersection point closest to the ray origin (if any). Modified by function.
 *
 * @return Whether or not the ray hit any objects
 */
-bool World::shootPrimaryRay(const int& currentRow, const int& currentColumn, const double& xOffset, const double& yOffset, Point3D& firstRayStart, int& intersectedObjectIdx, Point3D& intersectionPoint)
+bool World::shootPrimaryRay(const int& currentRow, const int& currentColumn, const double& xOffset, const double& yOffset, Point3D& firstRayStart, std::shared_ptr<SceneObject>& intersectedObject, Point3D& intersectionPoint)
 {
 	// Direction vector from world camera position to current point on view window
 	Vec3D firstRayDirection;
@@ -194,13 +315,20 @@ bool World::shootPrimaryRay(const int& currentRow, const int& currentColumn, con
 	std::vector<Point3D> intPoints;
 	double closestDistance = 0;
 	bool intersected = false;
+
+	// If BVH, use it
+	if (BVH()) {
+		return bvhIntersection(firstRay, intersectedObject, intersectionPoint);
+	}
+
+	// Otherwise, just do the usual ...
 	for (int i = 0; i < sceneObjects.size(); i++) {
-		sceneObjects[i].get()->intersection(firstRay, 0, 0, intPoints);
+		sceneObjects[i].get()->intersection(firstRay, 0, MAX_T, intPoints);
 		if (intPoints.size() > 0) {
 			int closestIntPointIdx = Arithmetic::closestPoint(firstRayStart, intPoints);
 			double dist = firstRayStart.distanceTo(intPoints[closestIntPointIdx]);
 			if (!intersected || dist < closestDistance) {
-				intersectedObjectIdx = i;
+				intersectedObject = sceneObjects[i];
 				closestDistance = dist;
 				intersectionPoint = intPoints[closestIntPointIdx];
 			}
@@ -226,7 +354,7 @@ bool World::shootPrimaryRay(const int& currentRow, const int& currentColumn, con
 *
 * @return Whether or not the ray hit any objects
 */
-void World::determineColor(const int& currentRow, const int& currentColumn, bool intersected, const Point3D& firstRayStart, const int& intersectedObjectIdx, const Point3D& intersectionPoint, ColorRGB& pixelColor)
+void World::determineColor(const int& currentRow, const int& currentColumn, bool intersected, const Point3D& firstRayStart, const std::shared_ptr<SceneObject>& intersectedObject, const Point3D& intersectionPoint, ColorRGB& pixelColor)
 {
 	// Just return the background image color if no intersections detected
 	if (!intersected) {
@@ -236,7 +364,6 @@ void World::determineColor(const int& currentRow, const int& currentColumn, bool
 
 	// Otherwise, determine color at pixel
 	std::vector<Point3D> intPoints;
-	const SceneObject* intersectedObject = sceneObjects[intersectedObjectIdx].get();
 	const Point3D& lightRayStart = intersectionPoint;
 	bool shadow = false;
 
@@ -256,7 +383,7 @@ void World::determineColor(const int& currentRow, const int& currentColumn, bool
 		// Iterate over all objects for the current light source to find shadow
 		for (int j = 0; j < sceneObjects.size(); j++) {
 			const SceneObject* currSceneObject = sceneObjects[j].get();
-			currSceneObject->intersection(lightRay, 0, 0, intPoints);
+			currSceneObject->intersection(lightRay, 0, MAX_T, intPoints);
 			const int closestShadowIntPointIdx = Arithmetic::closestPoint(lightRayStart, intPoints);
 
 			// intersection happens ONLY IF the intersection point happens BEFORE the ray reaches the light source
@@ -319,17 +446,18 @@ void World::determineColor(const int& currentRow, const int& currentColumn, bool
 */
 ColorRGB World::rayTrace(const int& currentRow, const int& currentColumn, const double& xOffset, const double& yOffset)
 {
+
 	// Step 0: Shoot the primary ray and determine any intersection points
 	Point3D firstRayStart;
 	Vec3D firstRayDirection;
-	int closestObjectIdx;
-	Point3D closestIntPoint;
-	bool intersected = shootPrimaryRay(currentRow, currentColumn, xOffset, yOffset, firstRayStart, closestObjectIdx, closestIntPoint);
+	std::shared_ptr<SceneObject> intersectedObject;
+	Point3D intPoint;
+	bool intersected = shootPrimaryRay(currentRow, currentColumn, xOffset, yOffset, firstRayStart, intersectedObject, intPoint);
 	camera.getRay(currentRow, currentColumn, xOffset, yOffset, firstRayStart, firstRayDirection);
 
 	// Step 1: Determine the color of the pixel
 	ColorRGB pixelColor;
-	determineColor(currentRow, currentColumn, intersected, firstRayStart, closestObjectIdx, closestIntPoint, pixelColor);
+	determineColor(currentRow, currentColumn, intersected, firstRayStart, intersectedObject, intPoint, pixelColor);
 
 	return pixelColor;
 }
@@ -354,6 +482,12 @@ Image World::render()
 
 	camera.ready();
 
+	// Preliminary: Prepare BVH Tree
+	if (BVH()) {
+		root = BVHNode(sceneObjects);
+	}
+
+	std::cout << std::endl;
 	// Iterate over all pixels, perform ray tracing on each
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < cols; j++) {
@@ -382,6 +516,37 @@ Image World::render()
 
 	return rm;
 }
+
+
+
+
+
+
+
+
+
+//bool hitLeft = left.intersection(firstRay, 0, 10000, intPoints);
+//bool hitRight = right.intersection(firstRay, 0, 10000, intPoints);
+
+//bool intLeft = false;
+//bool intRight = false;
+
+//if (hitLeft) {
+//	intLeft = bvhIntersectionHelper(left, firstRay, intersectedObjects, intersectionPoints);
+//	intPoints.clear();
+//}
+
+//if (hitRight) {
+//	intRight = bvhIntersectionHelper(right, firstRay, intersectedObjects, intersectionPoints);
+//}
+
+
+
+
+
+
+
+
 
 
 

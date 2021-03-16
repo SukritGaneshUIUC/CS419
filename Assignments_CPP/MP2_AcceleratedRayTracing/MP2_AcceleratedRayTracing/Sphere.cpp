@@ -28,34 +28,34 @@ const double& Sphere::getRadius() const
 	return radius;
 }
 
-///*
-//* Find the intersection points, if any, with a Ray3D
-//*
-//* @param ray The potentially intersecting
-//* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
-//*
-//* @return The number of intersection points
-//*/
-//int Sphere::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
-//{
-//	const Point3D& A = ray.getStart();
-//	const Point3D& C = center;
-//	const Vec3D& B = ray.getDirection();
-//	const double& R = radius;
-//
-//	double a = B.euclideanSquared();
-//	double b = 2.0 * B.dotProduct(A - C);
-//	double c = (A - C).euclideanSquared() - pow(R, 2.0);
-//
-//	std::vector<double> sols;
-//	int sol_count = Arithmetic::quadratic_solver(a, b, c, sols);
-//	for (const double& sol : sols) {
-//		if (sol > Arithmetic::EPSILON) {
-//			intTs.push_back(sol);
-//		}
-//	}
-//	return sols.size();
-//}
+/*
+* Find the intersection points, if any, with a Ray3D
+*
+* @param ray The potentially intersecting
+* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
+*
+* @return The number of intersection points
+*/
+int Sphere::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
+{
+	const Point3D& A = ray.getStart();
+	const Point3D& C = center;
+	const Vec3D& B = ray.getDirection();
+	const double& R = radius;
+
+	double a = B.euclideanSquared();
+	double b = 2.0 * B.dotProduct(A - C);
+	double c = (A - C).euclideanSquared() - pow(R, 2.0);
+
+	std::vector<double> sols;
+	int sol_count = Arithmetic::quadratic_solver(a, b, c, sols);
+	for (const double& sol : sols) {
+		if (sol > Arithmetic::EPSILON) {
+			intTs.push_back(sol);
+		}
+	}
+	return sols.size();
+}
 
 /*
 * Find the intersection points, if any, with a Ray3D

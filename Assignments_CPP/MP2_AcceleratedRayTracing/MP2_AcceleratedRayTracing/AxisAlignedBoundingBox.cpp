@@ -33,10 +33,17 @@ bool AxisAlignedBoundingBox::hit(const Ray3D& r, double t_min, double t_max) con
             (maximum[a] - r.getStart()[a]) / r.getDirection()[a]);
         t_min = fmax(t0, t_min);
         t_max = fmin(t1, t_max);
+        //t_min = t0;
+        //t_max = t1;
         if (t_max <= t_min)
             return false;
     }
     return true;
+}
+
+std::string AxisAlignedBoundingBox::toString() const
+{
+    return "Min: [" + minimum.toString() + "] | Max: [" + maximum.toString() + "]";
 }
 
 //inline bool AxisAlignedBoundingBox::hit(const Ray3D& r, double t_min, double t_max) const {
