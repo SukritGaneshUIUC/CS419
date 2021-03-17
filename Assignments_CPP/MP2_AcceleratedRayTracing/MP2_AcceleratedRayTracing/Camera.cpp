@@ -167,7 +167,7 @@ void Camera::ready()
 *
 * @return The point in world space
 */
-Point3D Camera::toWorldSpace(const Point3D& point)
+Point3D Camera::toWorldSpace(const Point3D& point) const
 {
 	return (u * point.x()) + (v * point.y()) + (w * point.z()) + worldPosition;
 }
@@ -184,7 +184,7 @@ Point3D Camera::toWorldSpace(const Point3D& point)
 * @param direction The direction of the ray, set by function
 *
 */
-bool Camera::getRay(const int& row, const int& column, const double& xOffset, const double& yOffset, Point3D& start, Vec3D& direction)
+bool Camera::getRay(const int& row, const int& column, const double& xOffset, const double& yOffset, Point3D& start, Vec3D& direction) const
 {
 	// calculate destination of ray in view space
 	double xv = pixelSize * (column - viewWindowCols / 2 + xOffset);

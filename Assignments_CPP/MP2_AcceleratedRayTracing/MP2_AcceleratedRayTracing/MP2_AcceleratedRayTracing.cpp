@@ -98,7 +98,7 @@ void perspectiveTest() {
     world.addSceneObject(std::shared_ptr<SceneObject>(new Sphere(Point3D(-2, -1.5, -3), 0.5, PINK_COLOR, PINK_COLOR)));
     world.addSceneObject(std::shared_ptr<SceneObject>(new Triangle({ Point3D(0, -2, -3.5), Point3D(2.5, -0.5, -3.0), Point3D(2.0, -2, -3.0) }, ORANGE_COLOR, ORANGE_COLOR)));
 
-    world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-12, 12, 2), WHITE_COLOR, WHITE_COLOR)));
+    world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-12, 20, 2), WHITE_COLOR, WHITE_COLOR)));
 
     // RENDER
     std::cout << "Rendering ..." << std::endl;
@@ -136,7 +136,7 @@ void singleSphereTest(int radius = 1) {
     Sphere* s = new Sphere(Point3D(-1, -1, -5), radius, Arithmetic::randomVec3D(BLACK_COLOR, WHITE_COLOR), Arithmetic::randomVec3D(BLACK_COLOR, WHITE_COLOR), Arithmetic::randomVec3D(BLACK_COLOR, WHITE_COLOR));
     world.addSceneObject(std::shared_ptr<SceneObject>(s));
 
-    world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-3, 20, 8), WHITE_COLOR, WHITE_COLOR)));
+    world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-12, 20, 2), WHITE_COLOR, WHITE_COLOR)));
 
     world.addRenderOption(RenderOption::BVH);
 
@@ -166,7 +166,7 @@ void sphereTest(int sphereCount=10) {
     camera.setWorldPosition({ 0,0,0 });
     world.setCamera(camera);
 
-    Image backgroundImage{ rows, cols, BLACK_COLOR };
+    Image backgroundImage{ rows, cols, ColorRGB(255, 219, 247) };
     world.setBackgroundImage(std::move(backgroundImage));
     world.setAmbientLight(WHITE_COLOR * 0.2);
 
@@ -181,7 +181,7 @@ void sphereTest(int sphereCount=10) {
         world.addSceneObject(std::shared_ptr<SceneObject>(s));
     }
 
-    world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-3, 20, 8), WHITE_COLOR, WHITE_COLOR)));
+    world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-12, 20, 2), WHITE_COLOR, WHITE_COLOR)));
 
     world.addRenderOption(RenderOption::BVH);
 
@@ -245,11 +245,12 @@ void intTest() {
 int main()
 {
     //testBench();
-    //perspectiveTest();
+    perspectiveTest();
     //singleSphereTest(3);
 
-    sphereTest(5);
+    //sphereTest(5);
     //sphereTest(25);
+    //sphereTest(100);
 
     //objTest("teapotObj.txt");
 

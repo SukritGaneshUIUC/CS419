@@ -8,7 +8,8 @@ BVHNode::BVHNode(const std::vector<std::shared_ptr<SceneObject>>& list) : Object
         objs.push_back(so);
     }
     *this = BVHNode(objs, 0, objs.size());
-    //std::cout << objs.size() << " objects in BVH tree!" << std::endl;
+    std::cout << std::endl << objs.size() << " objects in BVH tree!" << std::endl;
+    std::cout << this->toString() << std::endl;
 }
 
 
@@ -73,11 +74,6 @@ BVHNode::BVHNode(const std::vector<std::shared_ptr<Object>>& src_objects, size_t
     box = surroundingBox(box_left, box_right);
 }
 
-const bool& BVHNode::isLeaf() const
-{
-    return leaf;
-}
-
 const std::shared_ptr<Object>& BVHNode::getLeft() const
 {
     return left;
@@ -93,10 +89,15 @@ const AABB3D& BVHNode::getBoundingBox() const
     return box;
 }
 
+const bool& BVHNode::isLeaf() const
+{
+    return leaf;
+}
+
 bool BVHNode::generateBoundingBox(AABB3D& output_box) const
 {
-	output_box = box;
-	return true;
+    output_box = box;
+    return true;
 }
 
 /*
@@ -140,64 +141,47 @@ bool BVHNode::box_compare(const std::shared_ptr<Object>& a, const std::shared_pt
     return box_a.min()[axis] < box_b.min()[axis];
 }
 
-bool BVHNode::box_x_compare(const std::shared_ptr<Object>& a, const std::shared_ptr<Object>& b) const
+int BVHNode::intersection(const Ray3D& ray, const double& t_min, const double& t_max, HitRecord& hitRecord) const
 {
-    return box_compare(a, b, 0);
-}
-
-bool BVHNode::box_y_compare(const std::shared_ptr<Object>& a, const std::shared_ptr<Object>& b) const
-{
-    return box_compare(a, b, 1);
-}
-
-bool BVHNode::box_z_compare(const std::shared_ptr<Object>& a, const std::shared_ptr<Object>& b) const
-{
-    return box_compare(a, b, 2);
-}
-
-int BVHNode::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
-{
-	if (!box.hit(ray, t_min, t_max)) {
-		return false;
-	}
-
-    intTs.clear();
-	int hit_left = left->intersection(ray, t_min, t_max, intTs);
-    intTs.clear();
-	int hit_right = right->intersection(ray, t_min, hit_left ? intTs[0] : t_max, intTs);
-    intTs.clear();
-
-	return hit_left + hit_right;
-}
-
-int BVHNode::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<Point3D>& intPoints) const
-{
-    //if (!box.hit(ray, t_min, t_max)) {
-    //    return 0;
-    //}
-    //intPoints.clear();
-    //int hit_left = left->intersection(ray, t_min, t_max, intPoints);
-    //intPoints.clear();
-    //int hit_right = right->intersection(ray, t_min, t_max, intPoints);
-    //intPoints.clear();
-    //if (hit_left + hit_right > 0) {
-    //    return 1;
-    //}
-    //return 0;
-
-    //return box.hit(ray, t_min, t_max);
-
     if (!box.hit(ray, t_min, t_max)) {
-        return 0;
+        return false;
     }
-    int hit_left = left->intersection(ray, t_min, t_max, intPoints);
-    int hitIdx = Arithmetic::closestPoint(ray.getStart(), intPoints);
-    int hit_right = right->intersection(ray, t_min, hit_left ? ray.getT(intPoints[hitIdx]) : t_max, intPoints);
-    return hit_left + hit_right;
 
-    //if (!box.hit(ray, t_min, t_max)) {
-    //    return 0;
-    //}
+    bool hit_left = left->intersection(ray, t_min, t_max, hitRecord);
+    double tm = t_max;
+    if (hit_left) {
+        tm = hitRecord.intT;
+    }
+    bool hit_right = right->intersection(ray, t_min, tm, hitRecord);
+    //bool hit_right = right->intersection(ray, t_min, hit_left ? hitRecord.intT : t_max, hitRecord);
+
+    if (hit_left || hit_right) {
+        return 1;
+    }
+    return 0;
+}
+
+std::string BVHNode::toStringHelper(const BVHNode* curr, size_t level) const
+{
+    std::string printNode = "Level " + std::to_string(level) + ": " + curr->getBoundingBox().toString() + "\n";
+    
+    if (curr->isLeaf()) {
+        return printNode;
+    }
+
+    BVHNode* left = std::dynamic_pointer_cast<BVHNode>(curr->getLeft()).get();
+    BVHNode* right = std::dynamic_pointer_cast<BVHNode>(curr->getRight()).get();
+
+    std::string leftString = toStringHelper(left, level + 1);
+    std::string rightString = toStringHelper(right, level + 1);
+
+    return printNode + leftString + rightString;
+}
+
+std::string BVHNode::toString() const
+{
+    std::string bvhtree = "";
+    return toStringHelper(this, 0);
 }
 
 // NOTE: THESE FUNCTIONS DON'T HAVE ANY USE! THEY'RE SIMPLY TO COMPLY WITH THE PURE VIRTUAL OVERRIDE REQUIREMENTS OF THE PARENT CLASS, OBJECT!

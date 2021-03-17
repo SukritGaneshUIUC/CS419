@@ -23,8 +23,7 @@ public:
     const double& getAlpha() const;
 
     // IMPLEMENT FOR ALL SUBCLASSES
-    virtual int intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const = 0;
-    virtual int intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<Point3D>& intPoints) const = 0;
+    virtual int intersection(const Ray3D& ray, const double& t_min, const double& t_max, HitRecord& hitRecord) const = 0;
     virtual Vec3D normal(const Point3D& intersection) const = 0;
     virtual bool generateBoundingBox(AABB3D& bb) const = 0;
 

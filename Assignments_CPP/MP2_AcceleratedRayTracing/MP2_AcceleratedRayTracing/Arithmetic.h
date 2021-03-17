@@ -100,44 +100,6 @@ namespace Arithmetic {
             return false;
     }
 
-//    // credits to the geniuses at scratchapixel
-//    // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
-//    static bool ray_intersect_triangle(
-//        const Vec3D& orig, const Vec3D& dir,
-//        const Point3D& v0, const Point3D& v1, const Point3D& v2,
-//        double& t, double& u, double& v)
-//    {
-//#ifdef MOLLER_TRUMBORE 
-//        Vec3D v0v1 = v1 - v0;
-//        Vec3D v0v2 = v2 - v0;
-//        Vec3D pvec = dir.crossProduct(v0v2);
-//        double det = v0v1.dotProduct(pvec);
-//#ifdef CULLING 
-//        // if the determinant is negative the triangle is backfacing
-//        // if the determinant is close to 0, the ray misses the triangle
-//        if (det < EPSILON) return false;
-//#else 
-//        // ray and triangle are parallel if det is close to 0
-//        if (fabs(det) < EPSILON) return false;
-//#endif 
-//        double invDet = 1 / det;
-//
-//        Vec3D tvec = orig - v0;
-//        u = tvec.dotProduct(pvec) * invDet;
-//        if (u < 0 || u > 1) return false;
-//
-//        Vec3D qvec = tvec.crossProduct(v0v1);
-//        v = dir.dotProduct(qvec) * invDet;
-//        if (v < 0 || u + v > 1) return false;
-//
-//        t = v0v2.dotProduct(qvec) * invDet;
-//
-//        return true;
-//#else 
-//        ...
-//#endif 
-//    }
-
     // credit to the geniuses at scratchpixel
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection
     static bool ray_intersect_plane(const Point3D& planePoint, const Vec3D& planeNormal, const Ray3D& ray, double& intT, Point3D& intPoint)
@@ -156,7 +118,7 @@ namespace Arithmetic {
             if (intersectionT >= EPSILON) {
                 Ray3D temp{ l0, l };    // the ray, used to check intersection
                 intT = intersectionT;
-                intPoint.setPoint(temp.pos(intersectionT));     // calculate intersection point from intersectionT
+                intPoint = temp.pos(intersectionT);     // calculate intersection point from intersectionT
                 return true;
             }
         }
@@ -252,7 +214,7 @@ namespace Arithmetic {
     }
 
     // find barycentric coordinates of triangle
-    static void barycentric(const Point3D& p, const Point3D& a, const Point3D& b, const Point3D& c, double& u, double& v, float& w)
+    static void barycentric(const Point3D& p, const Point3D& a, const Point3D& b, const Point3D& c, double& u, double& v, double& w)
     {
         Vec3D v0 = b - a;
         Vec3D v1 = c - a;

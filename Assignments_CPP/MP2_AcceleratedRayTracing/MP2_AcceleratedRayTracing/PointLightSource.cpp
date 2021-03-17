@@ -21,36 +21,20 @@ const Point3D& PointLightSource::getPosition() const
 /*
 * Find the intersection points, if any, with a Ray3D
 *
-* @param ray The potentially intersecting
-* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
+* @param ray Potentially intersecting ray.
+* @param HitRecord Stores the intersection records. Modified by function.
 *
-* @return The number of intersection points
+* @return Number of intersection points: 1 upon successful intersection, 0 otherwise
 */
-int PointLightSource::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
+int PointLightSource::intersection(const Ray3D& ray, const double& t_min, const double& t_max, HitRecord& hitRecord) const
 {
     double intT = 0;
     Point3D intPoint;
     if (Arithmetic::ray_intersect_point(ray, position, intT, intPoint)) {
-        intTs.push_back(intT);
-        return 1;
-    }
-    return 0;
-}
-
-/*
-* Find the intersection points, if any, with a Ray3D
-*
-* @param ray The potentially intersecting
-* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
-*
-* @return The number of intersection points
-*/
-int PointLightSource::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<Point3D>& intPoints) const
-{
-    double intT = 0;
-    Point3D intPoint;
-    if (Arithmetic::ray_intersect_point(ray, position, intT, intPoint)) {
-        intPoints.push_back(intPoint);
+        if (intT < t_min || intT > t_max) {
+            return 0;
+        }
+        hitRecord = HitRecord(intT, intPoint, (position - ray.getStart()).get_normalized());
         return 1;
     }
     return 0;

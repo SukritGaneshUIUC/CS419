@@ -10,7 +10,9 @@
 * @param specular The specular color of the Plane
 * @param alpha The alpha factor of the Plane
 */
-Plane::Plane(const Point3D& point, const Vec3D& normal, const ColorRGB& ambient, const ColorRGB& diffuse, const ColorRGB& specular, const double& alpha) : SceneObject(ObjectType::Plane, ambient, diffuse, specular, alpha), point(point), normal_vector(normal) {}
+Plane::Plane(const Point3D& point, const Vec3D& normal, const ColorRGB& ambient, const ColorRGB& diffuse, const ColorRGB& specular, const double& alpha) : SceneObject(ObjectType::Plane, ambient, diffuse, specular, alpha), point(point), normal_vector(normal) {
+	(this->normal_vector).normalize();
+}
 
 /*
 * @return The specified point on the Plane
@@ -36,33 +38,16 @@ Vec3D Plane::getNormal() const
 *
 * @return The number of intersection points
 */
-int Plane::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
+int Plane::intersection(const Ray3D& ray, const double& t_min, const double& t_max, HitRecord& hitRecord) const
 {
 	double intT;
 	Point3D intPoint;
 	bool intersected = Arithmetic::ray_intersect_plane(point, normal_vector, ray, intT, intPoint);
 	if (intersected) {
-		intTs.push_back(intT);
-		return 1;
-	}
-	return 0;
-}
-
-/*
-* Find the intersection points, if any, with a Ray3D
-*
-* @param ray The potentially intersecting
-* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
-*
-* @return The number of intersection points
-*/
-int Plane::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<Point3D>& intPoints) const
-{
-	double intT;
-	Point3D intPoint;
-	bool intersected = Arithmetic::ray_intersect_plane(point, normal_vector, ray, intT, intPoint);
-	if (intersected) {
-		intPoints.push_back(intPoint);
+		if (intT < t_min || intT > t_max) {
+			return 0;
+		}
+		hitRecord = HitRecord(intT, intPoint, this->normal(intPoint), getAmbient(), getDiffuse(), getSpecular(), getAlpha());
 		return 1;
 	}
 	return 0;

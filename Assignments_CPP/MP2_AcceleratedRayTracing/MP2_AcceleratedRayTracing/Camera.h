@@ -62,8 +62,8 @@ public:
 	void setWorldPosition(const Point3D& worldPosition);
 
 	void ready();
-	Point3D toWorldSpace(const Point3D& point);
-	bool getRay(const int& row, const int& column, const double& xOffset, const double& yOffset, Point3D& start, Vec3D& direction);	// direction vector from camera position to pixel on viewWindow
+	Point3D toWorldSpace(const Point3D& point) const;
+	bool getRay(const int& row, const int& column, const double& xOffset, const double& yOffset, Point3D& start, Vec3D& direction) const;	// direction vector from camera position to pixel on viewWindow
 
 
 };

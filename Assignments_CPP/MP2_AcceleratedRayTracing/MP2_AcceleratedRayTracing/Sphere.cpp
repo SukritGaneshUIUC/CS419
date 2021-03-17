@@ -36,7 +36,7 @@ const double& Sphere::getRadius() const
 *
 * @return The number of intersection points
 */
-int Sphere::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<double>& intTs) const
+int Sphere::intersection(const Ray3D& ray, const double& t_min, const double& t_max, HitRecord& hitRecord) const
 {
 	const Point3D& A = ray.getStart();
 	const Point3D& C = center;
@@ -47,43 +47,25 @@ int Sphere::intersection(const Ray3D& ray, const double& t_min, const double& t_
 	double b = 2.0 * B.dotProduct(A - C);
 	double c = (A - C).euclideanSquared() - pow(R, 2.0);
 
+	std::vector<double> potentialSols;
+	int sol_count = Arithmetic::quadratic_solver(a, b, c, potentialSols);
+	
+	if (sol_count == 0) {
+		return 0;
+	}
 	std::vector<double> sols;
-	int sol_count = Arithmetic::quadratic_solver(a, b, c, sols);
-	for (const double& sol : sols) {
-		if (sol > Arithmetic::EPSILON) {
-			intTs.push_back(sol);
+	for (double ps : potentialSols) {
+		if (!(ps < Arithmetic::EPSILON || ps < t_min || ps > t_max)) {
+			sols.push_back(ps);
 		}
 	}
-	return sols.size();
-}
-
-/*
-* Find the intersection points, if any, with a Ray3D
-*
-* @param ray The potentially intersecting
-* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
-*
-* @return The number of intersection points
-*/
-int Sphere::intersection(const Ray3D& ray, const double& t_min, const double& t_max, std::vector<Point3D>& intPoints) const
-{
-	const Point3D& A = ray.getStart();
-	const Point3D& C = center;
-	const Vec3D& B = ray.getDirection();
-	const double& R = radius;
-
-	double a = B.euclideanSquared();
-	double b = 2.0 * B.dotProduct(A - C);
-	double c = (A - C).euclideanSquared() - pow(R, 2.0);
-
-	std::vector<double> sols;
-	int sol_count = Arithmetic::quadratic_solver(a, b, c, sols);
-	for (const double& sol : sols) {
-		if (sol > Arithmetic::EPSILON) {
-			intPoints.push_back(ray.pos(sol));
-		}
+	if (sols.size() == 0) {
+		return 0;
 	}
-	return sols.size();
+	double intT = *(std::min_element(sols.begin(), sols.end()));
+	Point3D intPoint = ray.pos(intT);
+	hitRecord = HitRecord(intT, intPoint, this->normal(intPoint), getAmbient(), getDiffuse(), getSpecular(), getAlpha());
+	return 1;
 }
 
 /*
@@ -96,7 +78,7 @@ int Sphere::intersection(const Ray3D& ray, const double& t_min, const double& t_
 */
 Vec3D Sphere::normal(const Point3D& intersection) const
 {
-	return intersection - center;
+	return (intersection - center).get_normalized();
 }
 
 bool Sphere::generateBoundingBox(AABB3D& bb) const
