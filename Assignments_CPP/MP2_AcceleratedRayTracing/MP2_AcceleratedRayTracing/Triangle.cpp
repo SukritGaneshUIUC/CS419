@@ -21,6 +21,18 @@ Triangle::Triangle(const Point3D(&v)[3], const ColorRGB& diffuse, const ColorRGB
 	normals[0].normalize();
 
 	meshTriangle = false;
+
+	Point3D minPoint;
+	Point3D maxPoint;
+
+	for (int i = 0; i < 3; i++) {
+		minPoint[i] = std::min(vertices[0][i], std::min(vertices[1][i], vertices[2][i]));
+		maxPoint[i] = std::max(vertices[0][i], std::max(vertices[1][i], vertices[2][i]));
+	}
+
+	boundingBox = AABB3D();
+	boundingBox.min() = minPoint;
+	boundingBox.max() = maxPoint;
 }
 
 /*
@@ -39,11 +51,28 @@ Triangle::Triangle(const Point3D(&v)[3], const Vec3D(&n)[3], const ColorRGB& amb
 	vertices[1] = v[1];
 	vertices[2] = v[2];
 
-	normals[0] = n[0].get_normalized();
-	normals[1] = n[1].get_normalized();
-	normals[2] = n[2].get_normalized();
+	normals[0] = n[0];
+	normals[1] = n[1];
+	normals[2] = n[2];
+
+	//normals[0] = n[0].get_normalized();
+	//normals[1] = n[1].get_normalized();
+	//normals[2] = n[2].get_normalized();
+
 
 	meshTriangle = true;
+
+	Point3D minPoint;
+	Point3D maxPoint;
+
+	for (int i = 0; i < 3; i++) {
+		minPoint[i] = std::min(vertices[0][i], std::min(vertices[1][i], vertices[2][i]));
+		maxPoint[i] = std::max(vertices[0][i], std::max(vertices[1][i], vertices[2][i]));
+	}
+
+	boundingBox = AABB3D();
+	boundingBox.min() = minPoint;
+	boundingBox.max() = maxPoint;
 }
 
 /*
@@ -86,10 +115,12 @@ const Point3D& Triangle::vertex2() const
 /*
 * Find the intersection points, if any, with a Ray3D
 *
-* @param ray The potentially intersecting
-* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
+* @param ray A Ray3D.
+* @param t_min The minimum t-value of the intersection.
+* @param t_max The maximum t-value of the intersection.
+* @param hitRecord A HitRecord struct which will store information related to the intersection (if any). Modified by function.
 *
-* @return The number of intersection points
+* @return The number of intersection points (1 or 0)
 */
 int Triangle::intersection(const Ray3D& ray, const double& t_min, const double& t_max, HitRecord& hitRecord) const
 {
@@ -107,13 +138,12 @@ int Triangle::intersection(const Ray3D& ray, const double& t_min, const double& 
 }
 
 /*
-* Find the normal vector at a given point
-* Uses weighted normals based on barycentric coordinates if three vertex normals are present, otherwise returns single pre-calculated face normal
-* Overridden virtual function
+* Get the normal vector of the object at a specified intersection point
+* May use face or barycentric normal
 *
-* @param intersection The point on the surface at which to find the normal vector
+* @param intersection The intersection point
 *
-* @return The normal vector
+* @return The normal vector of the surface at intersection
 */
 Vec3D Triangle::normal(const Point3D& intersection) const
 {
@@ -122,22 +152,28 @@ Vec3D Triangle::normal(const Point3D& intersection) const
 	}
 	double u, v, w;
 	Arithmetic::barycentric(intersection, vertices[0], vertices[1], vertices[2], u, v, w);
-	Vec3D weightedNormal{normals[0] * u + normals[1] * v + normals[2] * w};
-	return weightedNormal.get_normalized();
+	Vec3D weightedNormal{(normals[0] * u) + (normals[1] * v) + (normals[2] * w)};
+	weightedNormal.normalize();
+	//std::cout << "tn: " << weightedNormal.toString() << std::endl;
+	return weightedNormal;
 
 }
 
+/*
+* Generates an axis-aligned bounding box for the object
+*
+* @param bb An AABB3D to hold the axis-aligned bounding box of the object. Modified by functions.
+*/
 bool Triangle::generateBoundingBox(AABB3D& bb) const
 {
-	Point3D minPoint;
-	Point3D maxPoint;
-
-	for (int i = 0; i < 3; i++) {
-		minPoint[i] = std::min(vertices[0][i], std::min(vertices[1][i], vertices[2][i]));
-		maxPoint[i] = std::max(vertices[0][i], std::max(vertices[1][i], vertices[2][i]));
-	}
-
-	bb.min() = minPoint;
-	bb.max() = maxPoint;
+	bb = boundingBox;
 	return true;
+}
+
+/*
+* @return Triangle in pretty string format
+*/
+std::string Triangle::toString() const
+{
+	return vertices[0].toString() + ", " + vertices[1].toString() + ", " + vertices[2].toString();
 }

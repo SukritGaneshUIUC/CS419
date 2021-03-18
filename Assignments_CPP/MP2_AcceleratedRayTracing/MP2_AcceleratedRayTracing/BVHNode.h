@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "Arithmetic.h"
 #include "SceneObject.h"
+#include "TriangleMesh.h"
 
 class BVHNode :
     public Object
@@ -14,6 +15,7 @@ private:
     bool leaf;
 public:
     BVHNode();
+    BVHNode(const std::shared_ptr<TriangleMesh>& triangleMesh);
     BVHNode(const std::vector<std::shared_ptr<SceneObject>>& list);
     BVHNode(const std::vector<std::shared_ptr<Object>> list);
     BVHNode(const std::vector<std::shared_ptr<Object>>& src_objects, size_t start, size_t end);

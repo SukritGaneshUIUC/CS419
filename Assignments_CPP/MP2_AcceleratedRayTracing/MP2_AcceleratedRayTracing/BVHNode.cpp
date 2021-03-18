@@ -1,21 +1,64 @@
 #include "BVHNode.h"
 
+/*
+* Default constructor for BVHNode
+*/
 BVHNode::BVHNode() : Object(ObjectType::BVHNode) {}
 
-BVHNode::BVHNode(const std::vector<std::shared_ptr<SceneObject>>& list) : Object(ObjectType::BVHNode) {
+/*
+* Constructor for BVHNode
+* 
+* @param triangleMesh The TriangleMesh with which to build a BVH Tree
+*/
+BVHNode::BVHNode(const std::shared_ptr<TriangleMesh>& triangleMesh) : Object(ObjectType::BVHNode)
+{
+    std::vector<std::shared_ptr<Object>> objs;
+    for (std::shared_ptr<Triangle> so : triangleMesh->getTriangles()) {
+        //std::cout << "Triangle: " << so->toString() << std::endl;
+        objs.push_back(so);
+    }
+    auto box_x_compare = [&](const std::shared_ptr<Object>& a, const std::shared_ptr<Object>& b) -> bool {return box_compare(a, b, 0); };
+    std::sort(objs.begin(), objs.end(), box_x_compare);
+    std::cout << "Objects to insert into BVH Tree: " << objs.size() << std::endl;
+    *this = BVHNode(objs, 0, objs.size());
+    std::cout << std::endl << objs.size() << " objects in BVH tree!" << std::endl;
+}
+
+/*
+* Constructor for BVHNode
+* 
+* @param list A list of SceneObjects to use to build the BVH Tree
+*/
+BVHNode::BVHNode(const std::vector<std::shared_ptr<SceneObject>>& list) : Object(ObjectType::BVHNode) 
+{
     std::vector<std::shared_ptr<Object>> objs;
     for (std::shared_ptr<SceneObject> so : list) {
         objs.push_back(so);
     }
+    auto box_x_compare = [&](const std::shared_ptr<Object>& a, const std::shared_ptr<Object>& b) -> bool {return box_compare(a, b, 0); };
+    std::sort(objs.begin(), objs.end(), box_x_compare);
+    std::cout << "Objects to insert into BVH: " << objs.size() << std::endl;
     *this = BVHNode(objs, 0, objs.size());
     std::cout << std::endl << objs.size() << " objects in BVH tree!" << std::endl;
-    std::cout << this->toString() << std::endl;
 }
 
 
+/*
+* Constructor for BVHNode
+* 
+* @param list A list of Objects to use to build the BVH Tree
+*/
 BVHNode::BVHNode(const std::vector<std::shared_ptr<Object>> list) : BVHNode(list, 0, list.size()) {}
 
-BVHNode::BVHNode(const std::vector<std::shared_ptr<Object>>& src_objects, size_t start, size_t end) : Object(ObjectType::BVHNode) {
+/*
+* Primary Constructor for BVHNode (do not call directly)
+* 
+* @param src_objects A list of Objects to build the current BVH Node
+* @param start The left-bound index of the subset of Objects to use in constructing the current node
+* @param end The right-bound index of the subset of Objects to use in constructing the current node
+*/
+BVHNode::BVHNode(const std::vector<std::shared_ptr<Object>>& src_objects, size_t start, size_t end) : Object(ObjectType::BVHNode) 
+{
     leaf = false;
 
     // Lambda expressions for box compare
@@ -47,15 +90,15 @@ BVHNode::BVHNode(const std::vector<std::shared_ptr<Object>>& src_objects, size_t
         leaf = true;
     }
     else {
-        if (axis == 0) {
-            std::sort(objects.begin() + start, objects.begin() + end, box_x_compare);
-        }
-        else if (axis == 1) {
-            std::sort(objects.begin() + start, objects.begin() + end, box_y_compare);
-        }
-        else {
-            std::sort(objects.begin() + start, objects.begin() + end, box_z_compare);
-        }
+        //if (axis == 0) {
+        //    std::sort(objects.begin() + start, objects.begin() + end, box_x_compare);
+        //}
+        //else if (axis == 1) {
+        //    std::sort(objects.begin() + start, objects.begin() + end, box_y_compare);
+        //}
+        //else {
+        //    std::sort(objects.begin() + start, objects.begin() + end, box_z_compare);
+        //}
 
         leaf = false;
 
@@ -74,26 +117,43 @@ BVHNode::BVHNode(const std::vector<std::shared_ptr<Object>>& src_objects, size_t
     box = surroundingBox(box_left, box_right);
 }
 
+/*
+* @return The left node
+*/
 const std::shared_ptr<Object>& BVHNode::getLeft() const
 {
     return left;
 }
 
+/*
+* @return The right node
+*/
 const std::shared_ptr<Object>& BVHNode::getRight() const
 {
     return right;
 }
 
+/*
+* @return The bounding box of the node
+*/
 const AABB3D& BVHNode::getBoundingBox() const
 {
     return box;
 }
 
+/*
+* @return True if all the node's children are NOT BVHNodes, False otherwise
+*/
 const bool& BVHNode::isLeaf() const
 {
     return leaf;
 }
 
+/*
+* Retrieve the bounding box of the BVHNode
+* 
+* @param output_box The variable to hold the bounding box. Modified by function.
+*/
 bool BVHNode::generateBoundingBox(AABB3D& output_box) const
 {
     output_box = box;
@@ -141,6 +201,14 @@ bool BVHNode::box_compare(const std::shared_ptr<Object>& a, const std::shared_pt
     return box_a.min()[axis] < box_b.min()[axis];
 }
 
+/*
+* Check if a ray intersects with any descendant Objects of the BVHNode
+* 
+* @param ray The Ray3D.
+* @param t_min The minimum intersection t.
+* @param t_max The maximum intersection t.
+* @param hitRecord A HitRecord struct which will store information related to the intersection (if any). Modified by function.
+*/
 int BVHNode::intersection(const Ray3D& ray, const double& t_min, const double& t_max, HitRecord& hitRecord) const
 {
     if (!box.hit(ray, t_min, t_max)) {
@@ -148,12 +216,12 @@ int BVHNode::intersection(const Ray3D& ray, const double& t_min, const double& t
     }
 
     bool hit_left = left->intersection(ray, t_min, t_max, hitRecord);
-    double tm = t_max;
-    if (hit_left) {
-        tm = hitRecord.intT;
-    }
-    bool hit_right = right->intersection(ray, t_min, tm, hitRecord);
-    //bool hit_right = right->intersection(ray, t_min, hit_left ? hitRecord.intT : t_max, hitRecord);
+    //double tm = t_max;
+    //if (hit_left) {
+    //    tm = hitRecord.intT;
+    //}
+    //bool hit_right = right->intersection(ray, t_min, tm, hitRecord);
+    bool hit_right = right->intersection(ray, t_min, hit_left ? hitRecord.intT : t_max, hitRecord);
 
     if (hit_left || hit_right) {
         return 1;
@@ -161,6 +229,14 @@ int BVHNode::intersection(const Ray3D& ray, const double& t_min, const double& t
     return 0;
 }
 
+/*
+* Helper method for recursive toString
+* 
+* @param curr The current BVHNode
+* @param level The current level in the BVH Tree (top is level 0)
+* 
+* @return the BVHNode curr in a pretty string format
+*/
 std::string BVHNode::toStringHelper(const BVHNode* curr, size_t level) const
 {
     std::string printNode = "Level " + std::to_string(level) + ": " + curr->getBoundingBox().toString() + "\n";
@@ -178,6 +254,9 @@ std::string BVHNode::toStringHelper(const BVHNode* curr, size_t level) const
     return printNode + leftString + rightString;
 }
 
+/*
+* @return the node in a pretty string format
+*/
 std::string BVHNode::toString() const
 {
     std::string bvhtree = "";
@@ -211,22 +290,3 @@ Vec3D BVHNode::normal(const Point3D& intersection) const
 {
     return Vec3D(0,0,1);
 }
-
-//auto comparator = (axis == 0) ? box_x_compare
-//    : (axis == 1) ? box_y_compare
-//    : box_z_compare;
-
-//bool (BVHNode::*comparator)(const std::shared_ptr<Object>&, const std::shared_ptr<Object>&) const;
-//if (axis == 0) {
-//    comparator = &BVHNode::box_x_compare;
-//}
-//else if (axis == 1) {
-//    comparator = &BVHNode::box_y_compare;
-//}
-//else {
-//    comparator = &BVHNode::box_z_compare;
-//}
-
-//auto comparator = (axis == 0) ? box_x_compare
-//    : (axis == 1) ? box_y_compare
-//    : box_z_compare;

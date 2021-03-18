@@ -21,10 +21,12 @@ const Point3D& PointLightSource::getPosition() const
 /*
 * Find the intersection points, if any, with a Ray3D
 *
-* @param ray Potentially intersecting ray.
-* @param HitRecord Stores the intersection records. Modified by function.
+* @param ray A Ray3D.
+* @param t_min The minimum t-value of the intersection.
+* @param t_max The maximum t-value of the intersection.
+* @param hitRecord A HitRecord struct which will store information related to the intersection (if any). Modified by function.
 *
-* @return Number of intersection points: 1 upon successful intersection, 0 otherwise
+* @return The number of intersection points (1 or 0)
 */
 int PointLightSource::intersection(const Ray3D& ray, const double& t_min, const double& t_max, HitRecord& hitRecord) const
 {
@@ -40,6 +42,13 @@ int PointLightSource::intersection(const Ray3D& ray, const double& t_min, const 
     return 0;
 }
 
+/*
+* Get the normal vector of the object at a specified intersection point
+* 
+* @param intersection The intersection point
+* 
+* @return The normal vector of the surface at intersection
+*/
 Vec3D PointLightSource::normal(const Point3D& intersection) const
 {
     return Vec3D{ 0,0,1 };

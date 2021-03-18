@@ -10,7 +10,14 @@
 * @param specular The specular color of the Sphere
 * @param alpha The alpha factor of the Sphere
 */
-Sphere::Sphere(const Point3D& center, const double& radius, const ColorRGB& ambient, const ColorRGB& diffuse, const ColorRGB& specular, const double& alpha) : SceneObject(ObjectType::Sphere, ambient, diffuse, specular, alpha), center(center), radius(radius) {}
+Sphere::Sphere(const Point3D& center, const double& radius, const ColorRGB& ambient, const ColorRGB& diffuse, const ColorRGB& specular, const double& alpha) : SceneObject(ObjectType::Sphere, ambient, diffuse, specular, alpha), center(center), radius(radius) {
+	Point3D minPoint(center[0] - radius, center[1] - radius, center[2] - radius);
+	Point3D maxPoint(center[0] + radius, center[1] + radius, center[2] + radius);
+
+	boundingBox = AABB3D();
+	boundingBox.min() = minPoint;
+	boundingBox.max() = maxPoint;
+}
 
 /*
 * @return The center of the Sphere
@@ -31,10 +38,12 @@ const double& Sphere::getRadius() const
 /*
 * Find the intersection points, if any, with a Ray3D
 *
-* @param ray The potentially intersecting
-* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
+* @param ray A Ray3D.
+* @param t_min The minimum t-value of the intersection.
+* @param t_max The maximum t-value of the intersection.
+* @param hitRecord A HitRecord struct which will store information related to the intersection (if any). Modified by function.
 *
-* @return The number of intersection points
+* @return The number of intersection points (1 or 0)
 */
 int Sphere::intersection(const Ray3D& ray, const double& t_min, const double& t_max, HitRecord& hitRecord) const
 {
@@ -69,24 +78,24 @@ int Sphere::intersection(const Ray3D& ray, const double& t_min, const double& t_
 }
 
 /*
-* Find the normal vector at a given point
-* Overridden virtual function
+* Get the normal vector of the object at a specified intersection point
 *
-* @param intersection The point on the surface at which to find the normal vector
+* @param intersection The intersection point
 *
-* @return The normal vector
+* @return The normal vector of the surface at intersection
 */
 Vec3D Sphere::normal(const Point3D& intersection) const
 {
 	return (intersection - center).get_normalized();
 }
 
+/*
+* Generates an axis-aligned bounding box for the object
+* 
+* @param bb An AABB3D to hold the axis-aligned bounding box of the object. Modified by functions.
+*/
 bool Sphere::generateBoundingBox(AABB3D& bb) const
 {
-	Point3D minPoint(center[0] - radius, center[1] - radius, center[2] - radius);
-	Point3D maxPoint(center[0] + radius, center[1] + radius, center[2] + radius);
-
-	bb.min() = minPoint;
-	bb.max() = maxPoint;
+	bb = boundingBox;
 	return true;
 }

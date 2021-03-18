@@ -3,6 +3,8 @@
 #include <utility>
 #include <memory>
 #include <cassert>
+#include <ctime>
+#include <chrono>
 
 #include "Object.h"
 #include "Sphere.h"
@@ -28,7 +30,7 @@ class World
 private:
 	std::vector<std::shared_ptr<SceneObject>> sceneObjects;
 	std::vector<std::shared_ptr<LightSource>> lightSources;
-	TriangleMesh triangleMesh;
+	std::shared_ptr<TriangleMesh> triangleMesh;
 	std::vector<RenderOption> renderOptions;
 	Image backgroundImage;
 	Camera camera;
@@ -42,16 +44,20 @@ public:
 
 	const std::vector<std::shared_ptr<SceneObject>>& getSceneObjects() const;
 	const std::vector<std::shared_ptr<LightSource>>& getLightSource() const;
+	const std::shared_ptr<TriangleMesh>& getTriangleMesh() const;
 	const std::vector<RenderOption>& getRenderOptions() const;
 	const Image& getBackgroundImage();
 	const Camera& getCamera() const;
 	Camera& getCamera();
 	const ColorRGB& getAmbientLight();
-	bool antiAliasing() const;
-	bool BVH() const;
+
+	bool OPT_ANTI_ALIASING() const;
+	bool OPT_BVH() const;
+	bool OPT_TRIANGLE_MESH() const;
 
 	void addSceneObject(std::shared_ptr<SceneObject> sceneObject);
 	void addLightSource(std::shared_ptr<LightSource> lightSource);
+	void setTriangleMesh(const std::shared_ptr<TriangleMesh>& triangleMesh);
 	void addRenderOption(const RenderOption& renderOption);
 	void setBackgroundImage(Image&& image);
 	void setCamera(const Camera& camera);

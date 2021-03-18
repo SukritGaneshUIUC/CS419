@@ -188,51 +188,49 @@ void sphereTest(int sphereCount=10) {
     // RENDER
     std::cout << "Rendering ...\n" << std::endl;
     Image im{ world.render() };
-    std::cout << "\nDone rendering ..." << std::endl;
+    std::cout << "\nDone rendering ..." << std::endl << std::endl;
     std::string filepath = "spheres" + std::to_string(sphereCount) +".ppm";
     im.writeToFile(filepath);
 }
 
-//void objTest(const std::string& objFilepath) {
-//    // SETUP WORLD    
-//    World world;
-//    int rows = 500;
-//    int cols = 500;
-//    double width = 2.0;  // higher value = zoom out, lower value = zoom in
-//
-//    Camera camera;
-//    camera.setPosition({ 0,0,3 });
-//    camera.setViewWindowPosition(Point3D(0, 0, 1.5));
-//    camera.setUpVector(Vec3D(0, 1, 0));
-//    camera.setViewWindowRows(rows);
-//    camera.setViewWindowCols(cols);
-//    camera.setPixelSize(width / rows);
-//    camera.setProjectionType(ProjectionType::PERSPECTIVE);
-//    camera.setWorldPosition({ 0,0,0 });
-//    world.setCamera(camera);
-//
-//    Image backgroundImage{ rows, cols, BLACK_COLOR };
-//    world.setBackgroundImage(std::move(backgroundImage));
-//    world.setAmbientLight(WHITE_COLOR * 0.2);
-//
-//    // BUILD WORLD
-//    TriangleMesh tm;
-//    tm.loadFromOBJFile(objFilepath);
-//    for (const std::shared_ptr<Triangle>& t : tm.getTriangles()) {
-//        world.addSceneObject(t);
-//    }
-//
-//    world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-3, 20, 8), WHITE_COLOR, WHITE_COLOR)));
-//
-//    std::cout << world.getSceneObjects().size() << std::endl;
-//
-//    // RENDER
-//    std::cout << "Rendering ..." << std::endl;
-//    Image im{ world.render() };
-//    std::cout << "Done rendering ..." << std::endl;
-//    std::string filepath = objFilepath.substr(0, objFilepath.size() - 4) + "Test.ppm";
-//    im.writeToFile(filepath);
-//}
+void objTest(const std::string& objFilepath) {
+    // SETUP WORLD    
+    World world;
+    int rows = 500;
+    int cols = 500;
+    double width = 1.0;  // higher value = zoom out, lower value = zoom in
+
+    Camera camera;
+    camera.setPosition({ 0,0,0 });
+    camera.setViewWindowPosition(Point3D(0, 0, -1));
+    camera.setUpVector(Vec3D(0, 1, 0));
+    camera.setViewWindowRows(rows);
+    camera.setViewWindowCols(cols);
+    camera.setPixelSize(width / rows);
+    camera.setProjectionType(ProjectionType::PERSPECTIVE);
+    camera.setWorldPosition({ 0,2,8 });
+    world.setCamera(camera);
+
+    Image backgroundImage{ rows, cols, YELLOW_COLOR };
+    world.setBackgroundImage(std::move(backgroundImage));
+    world.setAmbientLight(WHITE_COLOR * 0.2);
+
+    // BUILD WORLD
+    std::shared_ptr<TriangleMesh> tm{ new TriangleMesh };
+    tm->loadFromOBJFile(objFilepath);
+    world.setTriangleMesh(tm);
+
+    world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-12, -30, 12), WHITE_COLOR, WHITE_COLOR)));
+
+    world.addRenderOption(RenderOption::TRIANGLE_MESH);
+
+    // RENDER
+    std::cout << "Rendering ..." << std::endl;
+    Image im{ world.render() };
+    std::cout << "Done rendering ..." << std::endl;
+    std::string filepath = objFilepath.substr(0, objFilepath.size() - 4) + "Test.ppm";
+    im.writeToFile(filepath);
+}
 
 void intTest() {
     std::vector<Point3D> intPoints;
@@ -245,14 +243,17 @@ void intTest() {
 int main()
 {
     //testBench();
-    perspectiveTest();
+    //perspectiveTest();
     //singleSphereTest(3);
 
     //sphereTest(5);
     //sphereTest(25);
     //sphereTest(100);
+    //sphereTest(1000);
+    //sphereTest(10000);
 
     //objTest("teapotObj.txt");
+    objTest("dragonObj.txt");
 
 
 }

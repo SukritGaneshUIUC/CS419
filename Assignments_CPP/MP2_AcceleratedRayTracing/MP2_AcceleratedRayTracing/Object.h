@@ -17,6 +17,9 @@ struct Material {
 	ColorRGB specular;
 	double alpha;
 
+	/*
+	* Default constructor for Material
+	*/
 	Material() {
 		this->ambient = DEFAULT_COLOR;
 		this->diffuse = DEFAULT_COLOR;
@@ -24,6 +27,14 @@ struct Material {
 		this->alpha = 5.0;
 	};
 
+	/*
+	* Constructor for Material
+	* 
+	* @param ambient The ambient color
+	* @param diffuse The diffuse color
+	* @param specular The specular color
+	* @param alpha The alpha factor
+	*/
 	Material(const ColorRGB& ambient, const ColorRGB& diffuse, const ColorRGB& specular, const double& alpha) {
 		this->ambient = ambient;
 		this->diffuse = diffuse;
@@ -38,8 +49,19 @@ struct HitRecord {
 	Vec3D normal;
 	Material material;
 
+	/*
+	* Default constructor for HitRecord
+	*/
 	HitRecord() {}
 
+
+	/*
+	* Constructor for HitRecord
+	* 
+	* @param intT The intersection t-value
+	* @param intPoint The intersection point
+	* @param normal The normal of the intersection surface at the intersection point
+	*/
 	HitRecord(const double& intT, const Point3D& intPoint, const Vec3D& normal) {
 		this->intT = intT;
 		this->intPoint = intPoint;
@@ -47,6 +69,15 @@ struct HitRecord {
 		this->material = Material();
 	}
 
+
+	/*
+	* Constructor for HitRecord
+	*
+	* @param intT The intersection t-value
+	* @param intPoint The intersection point
+	* @param normal The normal of the intersected surface at the intersection point
+	* @param material The material of the intersected surface
+	*/
 	HitRecord(const double& intT, const Point3D& intPoint, const Vec3D& normal, const Material& material) {
 		this->intT = intT;
 		this->intPoint = intPoint;
@@ -54,6 +85,17 @@ struct HitRecord {
 		this->material = material;
 	}
 
+	/*
+	* Constructor for HitRecord
+	*
+	* @param intT The intersection t-value
+	* @param intPoint The intersection point
+	* @param normal The normal of the intersected surface at the intersection point
+	* @param ambient The ambient color of the intersected surface
+	* @param diffuse The diffuse color of the intersected surface
+	* @param specular The specular color of the intersected surface
+	* @param alpha The alpha factor of the intersected surface
+	*/
 	HitRecord(const double& intT, const Point3D& intPoint, const Vec3D& normal, const ColorRGB& ambient, const ColorRGB& diffuse, const ColorRGB& specular, const double& alpha) {
 		this->intT = intT;
 		this->intPoint = intPoint;

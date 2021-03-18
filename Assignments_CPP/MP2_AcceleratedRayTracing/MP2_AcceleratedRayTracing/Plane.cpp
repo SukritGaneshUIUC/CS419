@@ -33,10 +33,12 @@ Vec3D Plane::getNormal() const
 /*
 * Find the intersection points, if any, with a Ray3D
 *
-* @param ray The potentially intersecting
-* @param intPoints A vector of type Point3D, to which the function will push back any intersection points
+* @param ray A Ray3D.
+* @param t_min The minimum t-value of the intersection.
+* @param t_max The maximum t-value of the intersection.
+* @param hitRecord A HitRecord struct which will store information related to the intersection (if any). Modified by function.
 *
-* @return The number of intersection points
+* @return The number of intersection points (1 or 0)
 */
 int Plane::intersection(const Ray3D& ray, const double& t_min, const double& t_max, HitRecord& hitRecord) const
 {
@@ -65,6 +67,8 @@ Vec3D Plane::normal(const Point3D& intersection) const
 {
 	return normal_vector;
 }
+
+// NOT APPLICABLE
 
 bool Plane::generateBoundingBox(AABB3D& bb) const
 {

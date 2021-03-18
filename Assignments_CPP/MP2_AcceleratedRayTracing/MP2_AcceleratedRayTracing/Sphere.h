@@ -10,6 +10,7 @@ class Sphere :
 private:
     Point3D center;
     double radius;
+    AABB3D boundingBox;
 public:
     Sphere(const Point3D& center, const double& radius, const ColorRGB& ambient = DEFAULT_COLOR, const ColorRGB& diffuse = DEFAULT_COLOR, const ColorRGB& specular = DEFAULT_COLOR, const double& alpha = DEFAULT_ALPHA);
 

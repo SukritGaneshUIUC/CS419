@@ -169,7 +169,7 @@ void Camera::ready()
 */
 Point3D Camera::toWorldSpace(const Point3D& point) const
 {
-	return (u * point.x()) + (v * point.y()) + (w * point.z()) + worldPosition;
+	return (u * point.x()) + (v * point.y()) + (w * point.z()) + position + worldPosition;
 }
 
 /*

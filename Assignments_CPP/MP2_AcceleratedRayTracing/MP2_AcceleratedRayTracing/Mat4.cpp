@@ -1,5 +1,10 @@
 #include "Mat4.h"
 
+/*
+* Copy a Mat4
+* 
+* @param other The Mat4 to copy.
+*/
 void Mat4::copy(const Mat4& other)
 {
 	for (size_t row = 0; row < AFFINE_DIMS; row++) {
@@ -9,23 +14,53 @@ void Mat4::copy(const Mat4& other)
 	}
 }
 
+/*
+* Default constructor for Mat4
+* Sets elements to equal a 4x4 identity matrix
+*/
 Mat4::Mat4() : elements{ 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 } {}
 
+/*
+* Copy Constructor for Mat4
+* 
+* @param other The Mat4 to copy.
+*/
 Mat4::Mat4(const Mat4& other)
 {
 	this->copy(other);
 }
 
+/*
+* Get the matrix entry at a specified row and column
+* 
+* @param row The row
+* @param col The column
+* 
+* @return The element at [row][col]
+*/
 const double& Mat4::get(const size_t& row, const size_t& col) const
 {
 	return elements[row * AFFINE_DIMS + col];
 }
 
+/*
+* Set the matrix entry at a specified row and column to a specified value
+* 
+* @param row The row
+* @param col The column
+* @param newVal The value to set the entry at [row][col] to
+*/
 void Mat4::set(const size_t& row, const size_t& col, const double& newVal)
 {
 	elements[row * AFFINE_DIMS + col] = newVal;
 }
 
+/*
+* Returns an entire row of the matrix
+* 
+* @param row The row index
+* @param arr The array of length 4 to hold the row
+*/
 void Mat4::getRow(const size_t& row, double(&arr)[AFFINE_DIMS]) const
 {
 	for (size_t col = 0; col < AFFINE_DIMS; col++) {
@@ -33,6 +68,12 @@ void Mat4::getRow(const size_t& row, double(&arr)[AFFINE_DIMS]) const
 	 }
 }
 
+/*
+* Returns an entire column of the matrix
+* 
+* @param col The column index
+* @param arr The array of length 4 to hold the column
+*/
 void Mat4::getCol(const size_t& col, double(&arr)[AFFINE_DIMS]) const
 {
 	for (size_t row = 0; row < AFFINE_DIMS; row++) {
@@ -40,6 +81,14 @@ void Mat4::getCol(const size_t& col, double(&arr)[AFFINE_DIMS]) const
 	}
 }
 
+/*
+* Returns the dor product of two arrays of length 4
+* 
+* @param v1 The first array
+* @param v2 The second array
+* 
+* @return v1 <dot> v2
+*/
 double Mat4::dotProduct(const double(&v1)[AFFINE_DIMS], const double(&v2)[AFFINE_DIMS]) const
 {
 	double dp = 0;
@@ -49,6 +98,13 @@ double Mat4::dotProduct(const double(&v1)[AFFINE_DIMS], const double(&v2)[AFFINE
 	return dp;
 }
 
+/*
+* Multiplies this with another Mat4, and stores the result in this
+* 
+* @param other The Mat4 to multiply this by
+* 
+* @return *this
+*/
 Mat4& Mat4::operator*=(const Mat4& other)
 {
 	Mat4 multResult{};
@@ -72,6 +128,13 @@ Mat4& Mat4::operator*=(const Mat4& other)
 	return *this;
 }
 
+/*
+* Multiplies this with another Mat4, and returns the result
+* 
+* @param other The Mat4 to multiply this by
+* 
+* @return *this * other
+*/
 Mat4 Mat4::operator*(const Mat4& other) const
 {
 	Mat4 temp = *this;
@@ -79,11 +142,21 @@ Mat4 Mat4::operator*(const Mat4& other) const
 	return temp;
 }
 
+/*
+* @return An identity Mat4
+*/
 Mat4 Mat4::fromIdentity()
 {
 	return Mat4();
 }
 
+/*
+* Generates a translation Mat4 (affine)
+* 
+* @param translationAmount The amount to translate by
+* 
+* @return An identity matrix translated by translationAmount
+*/
 Mat4 Mat4::fromTranslation(const Vec3D& translationAmount)
 {
 	Mat4 temp;
@@ -93,6 +166,14 @@ Mat4 Mat4::fromTranslation(const Vec3D& translationAmount)
 	return temp;
 }
 
+/*
+* Generates a rotation Mat4 (affine)
+* 
+* @param rotationAmount The radians to rotate by
+* @param axis The axis of rotation
+* 
+* @return An identity matrix rotated by rotationAmount
+*/
 Mat4 Mat4::fromRotation(const double& rotationAmount, const Vec3D& axis)
 {
 	Mat4 temp;
@@ -124,6 +205,13 @@ Mat4 Mat4::fromRotation(const double& rotationAmount, const Vec3D& axis)
 	return temp;
 }
 
+/*
+* Generates a scale matrix (affine)
+* 
+* @param scaleAmount The amount to scale by
+* 
+* @return An identity matrix scaled by scaleAmount
+*/
 Mat4 Mat4::fromScale(const Vec3D& scaleAmount)
 {
 	Mat4 temp;
@@ -133,24 +221,43 @@ Mat4 Mat4::fromScale(const Vec3D& scaleAmount)
 	return temp;
 }
 
+/*
+* Applies a translation transformation to this
+* 
+* @param translationAmount The amount to translate by
+*/
 void Mat4::translate(const Vec3D& translationAmount)
 {
 	Mat4 translationMatrix = this->fromTranslation(translationAmount);
 	(*this) = translationMatrix * (*this);
 }
 
+/*
+* Applies a rotation transformation to this
+* 
+* @param rotationAmount The amount to rotate by (radians)
+* @param axis The axis of rotation
+*/
 void Mat4::rotate(const double& rotationAmount, const Vec3D& axis)
 {
 	Mat4 rotationMatrix = this->fromRotation(rotationAmount, axis);
 	(*this) = rotationMatrix * (*this);
 }
 
+/*
+* Applies a scale transformation to this
+* 
+* @param scaleAmount The amount to scale by
+*/
 void Mat4::scale(const Vec3D& scaleAmount)
 {
 	Mat4 scaleMatrix = this->fromScale(scaleAmount);
 	(*this) = scaleMatrix * (*this);
 }
 
+/*
+* @return The transpose of this
+*/
 Mat4 Mat4::getTranspose() const
 {
 	Mat4 transpose{};
@@ -164,6 +271,9 @@ Mat4 Mat4::getTranspose() const
 	return transpose;
 }
 
+/*
+* Get the inverse of this (if this is a Mat4 containing a single Mat4)
+*/
 Mat4 Mat4::getSingleTransformationInverse(const Transformation& transformationType) const
 {
 

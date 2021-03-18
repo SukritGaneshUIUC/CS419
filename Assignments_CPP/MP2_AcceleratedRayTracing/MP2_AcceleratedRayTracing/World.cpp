@@ -27,6 +27,14 @@ const std::vector<std::shared_ptr<LightSource>>& World::getLightSource() const
 	return lightSources;
 }
 
+/*
+* @return A reference to the triangleMesh
+*/
+const std::shared_ptr<TriangleMesh>& World::getTriangleMesh() const
+{
+	return triangleMesh;
+}
+
 
 /*
 * @return A reference to the vector of all RenderOption in the World
@@ -35,7 +43,6 @@ const std::vector<RenderOption>& World::getRenderOptions() const
 {
 	return renderOptions;
 }
-
 
 /*
 * @param sceneObject The SceneObject to add to the world
@@ -52,6 +59,14 @@ void World::addSceneObject(std::shared_ptr<SceneObject> sceneObject)
 void World::addLightSource(std::shared_ptr<LightSource> lightSource)
 {
 	lightSources.push_back(lightSource);
+}
+
+/*
+* @param triangleMesh The TriangleMesh to add to the world
+*/
+void World::setTriangleMesh(const std::shared_ptr<TriangleMesh>& triangleMesh)
+{
+	this->triangleMesh = triangleMesh;
 }
 
 /*
@@ -91,7 +106,7 @@ void World::setAmbientLight(const ColorRGB& ambientColor)
 /*
 * @return bool Checks whether the user selected AntiAliasing as a RenderOption
 */
-bool World::antiAliasing() const
+bool World::OPT_ANTI_ALIASING() const
 {
 	return std::find(renderOptions.begin(), renderOptions.end(), RenderOption::ANTI_ALIASING) != renderOptions.end();
 }
@@ -99,9 +114,17 @@ bool World::antiAliasing() const
 /*
 * @return bool Checks whether the user selected BVH as a RenderOption
 */
-bool World::BVH() const
+bool World::OPT_BVH() const
 {
 	return std::find(renderOptions.begin(), renderOptions.end(), RenderOption::BVH) != renderOptions.end();
+}
+
+/*
+* @return bool Checks whether the user selected TRIANGLE_MESH as a RenderOption
+*/
+bool World::OPT_TRIANGLE_MESH() const
+{
+	return std::find(renderOptions.begin(), renderOptions.end(), RenderOption::TRIANGLE_MESH) != renderOptions.end();
 }
 
 /*
@@ -201,7 +224,7 @@ bool World::surroundingBox(const std::vector<std::shared_ptr<Object>>& objects, 
 * @param xOffset The horizontal offset of the ray destination.
 * @param yOffset The vertical offset of the ray destination.
 * @param firstRay The initial ray shot by the ray tracer. Modified by function.
-* @param hitRecord The hit record (if any). Modified by function.
+* @param hitRecord HitRecord struct holding intersection information (if any). Modified by function.
 *
 * @return Whether or not the ray hit any objects
 */
@@ -220,11 +243,7 @@ bool World::shootPrimaryRay(const int& currentRow, const int& currentColumn, con
 	double minDist = 0;
 	bool intersected = false;
 
-	//// If BVH, use it
-	//if (BVH()) {
-	//	return bvhIntersection(firstRay, intersectedObject, intersectionPoint);
-	//}
-	if (BVH()) {
+	if (OPT_TRIANGLE_MESH() || OPT_BVH()) {
 		return root.intersection(firstRay, 0, MAX_T, hitRecord);
 	}
 
@@ -251,13 +270,9 @@ bool World::shootPrimaryRay(const int& currentRow, const int& currentColumn, con
 * @param currentRow The row of the pixel.
 * @param currentColumn The column the pixel.
 * @param intersected The number of intersection points encountered by the primary ray.
-* @param firstRayStart A Point3D which will hold the origin of the primary ray. Modified by function.
-* @param closestObjectIdx The index of the closest intersected object (if any).
-* @param intersectionPoint The intersection point closest to the ray origin (if any).
-* @param closestObjectIdx An integer which will hold the index of the closest intersected object (if any). 
+* @param firstRay The primary ray.
+* @param hitRecord HitRecord struct holding intersection information (if any).
 * @param pixelColor A Point3D which will hold the color of the current pixel. Modified by function.
-*
-* @return Whether or not the ray hit any objects
 */
 void World::determineColor(const int& currentRow, const int& currentColumn, bool intersected, const Ray3D& firstRay, HitRecord& hitRecord, ColorRGB& pixelColor)
 {
@@ -285,22 +300,32 @@ void World::determineColor(const int& currentRow, const int& currentColumn, bool
 		const Ray3D lightRay{ lightRayStart, currentLightPoint - lightRayStart };
 
 		// Iterate over all objects for the current light source to find shadow
-		for (int j = 0; j < sceneObjects.size(); j++) {
-			const SceneObject* currSceneObject = sceneObjects[j].get();
-			HitRecord currLightHitRecord;
-			bool currShadow = currSceneObject->intersection(lightRay, 0, MAX_T, currLightHitRecord);
-
-			// intersection happens ONLY IF the intersection point happens BEFORE the ray reaches the light source
-			if (currShadow && lightRayStart.distanceTo(currLightHitRecord.intPoint) < lightRayStart.distanceTo(currentLightPoint)) {
+		if (OPT_BVH() || OPT_TRIANGLE_MESH()) {
+			const double t_max_shadow = lightRay.getT(currentLightPoint);
+			HitRecord shadowHitRecord;
+			if (root.intersection(lightRay, 0, t_max_shadow, shadowHitRecord)) {
 				shadow = true;
-				diffuseComponent = BLACK_COLOR / 255;
-				specularComponent = BLACK_COLOR / 255;
 				break;
 			}
-			// otherwise, apply phong reflection model
 		}
-		if (shadow) {
-			break;
+		else {
+			for (int j = 0; j < sceneObjects.size(); j++) {
+				const SceneObject* currSceneObject = sceneObjects[j].get();
+				HitRecord currLightHitRecord;
+				bool currShadow = currSceneObject->intersection(lightRay, 0, MAX_T, currLightHitRecord);
+
+				// intersection happens ONLY IF the intersection point happens BEFORE the ray reaches the light source
+				if (currShadow && lightRayStart.distanceTo(currLightHitRecord.intPoint) < lightRayStart.distanceTo(currentLightPoint)) {
+					shadow = true;
+					diffuseComponent = BLACK_COLOR / 255;
+					specularComponent = BLACK_COLOR / 255;
+					break;
+				}
+				// otherwise, apply phong reflection model
+			}
+			if (shadow) {
+				break;
+			}
 		}
 
 		// If no shadow, apply phong reflection model
@@ -369,6 +394,7 @@ ColorRGB World::rayTrace(const int& currentRow, const int& currentColumn, const 
 */
 Image World::render()
 {
+	// Preliminary setup
 	std::cout << "Total Scene Objects: " << sceneObjects.size() << std::endl;
 	std::cout << "Total Light Sources: " << lightSources.size() << std::endl;
 
@@ -382,9 +408,27 @@ Image World::render()
 
 	camera.ready();
 
+	// Record Start time
+	auto start_time = std::chrono::high_resolution_clock::now();
+
 	// Preliminary: Prepare BVH Tree
-	if (BVH()) {
+	clock_t start;
+	start = clock();
+
+	if (OPT_TRIANGLE_MESH()) {
+		std::cout << std::endl << "Building BVH from TriangleMesh..." << std::endl;
+		root = BVHNode(triangleMesh);
+	} else if (OPT_BVH()) {
+		std::cout << std::endl << "Building BVH from sceneObjects..." << std::endl;
 		root = BVHNode(sceneObjects);
+	}
+
+	// Record BVH time (if applicable)
+	double bvh_seconds = 0;
+	auto bvh_finish_time = clock();
+	if (OPT_TRIANGLE_MESH() || OPT_BVH()) {
+		bvh_seconds = ((double)(bvh_finish_time - start)) / ((double)(CLOCKS_PER_SEC));
+		std::cout << "Done building BVH! Took " << bvh_seconds << " seconds." << std::endl << std::endl;
 	}
 
 	std::cout << std::endl;
@@ -395,7 +439,7 @@ Image World::render()
 
 			// Generate multiple samples with anti-aliasing, one sample without
 			std::vector<std::pair<double, double>> offsets{};
-			if (antiAliasing()) {
+			if (OPT_ANTI_ALIASING()) {
 				Arithmetic::multi_jittered_sampling(4, offsets);
 			}
 			else {
@@ -417,5 +461,21 @@ Image World::render()
 	}
 	std::cout << "Rendering ... " << blockCount << "% done" << std::endl;
 
+	// Record Ending times
+	double ray_tracing_seconds = 0;
+	auto render_finish_time = clock();
+	ray_tracing_seconds = ((double)(render_finish_time - bvh_finish_time)) / ((double)(CLOCKS_PER_SEC));
+
+	double total_render_seconds = ray_tracing_seconds;
+	
+	std::cout << "Statistics:" << std::endl;
+	if (OPT_TRIANGLE_MESH() || OPT_BVH()) {
+		std::cout << "BVH Construction Time: " << bvh_seconds << " seconds." << std::endl;
+		total_render_seconds += bvh_seconds;
+	}
+	std::cout << "Ray Tracing Time: " << ray_tracing_seconds << " seconds." << std::endl;
+	std::cout << "Total Render Time: " << total_render_seconds << " seconds." << std::endl << std::endl;
+
+	// Return rendered image
 	return rm;
 }
