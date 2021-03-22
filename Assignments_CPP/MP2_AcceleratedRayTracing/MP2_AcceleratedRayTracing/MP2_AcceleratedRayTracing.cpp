@@ -222,7 +222,7 @@ void objTest(const std::string& objFilepath) {
 
     world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-12, -30, 12), WHITE_COLOR, WHITE_COLOR)));
 
-    world.addRenderOption(RenderOption::TRIANGLE_MESH);
+    //world.addRenderOption(RenderOption::TRIANGLE_MESH);
 
     // RENDER
     std::cout << "Rendering ..." << std::endl;
@@ -249,11 +249,12 @@ int main()
     //sphereTest(5);
     //sphereTest(25);
     //sphereTest(100);
-    //sphereTest(1000);
-    //sphereTest(10000);
+    sphereTest(1000);
+    sphereTest(10000);
+    sphereTest(100000);
 
     //objTest("teapotObj.txt");
-    objTest("dragonObj.txt");
+    //objTest("dragonObj.txt");
 
 
 }
