@@ -1,0 +1,74 @@
+﻿  AxisAlignedBoundingBox.cpp
+  BVHNode.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  Camera.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  Image.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Image.cpp(29,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Image.cpp(30,24): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Image.cpp(44,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Image.cpp(45,24): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Image.cpp(216,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Image.cpp(217,28): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Image.cpp(268,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Image.cpp(269,28): warning C4018: '<': signed/unsigned mismatch
+  LightSource.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  Mat4.cpp
+  Model.cpp
+  MP3_WhittedRayTracing.cpp
+  The contents of <filesystem> are available only with C++17 or later.
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing.cpp(178,26): warning C4018: '<': signed/unsigned mismatch
+  Object.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  Plane.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  PointLightSource.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  Ray3D.cpp
+  SceneObject.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  Sphere.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  Triangle.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  TriangleMesh.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  Vec3D.cpp
+  World.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(140,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(178,36): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\World.cpp(251,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\World.cpp(297,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\World.cpp(312,22): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\LightSource.cpp(32): warning C4172: returning address of local variable or temporary
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\BVHNode.cpp(286): warning C4172: returning address of local variable or temporary
+  MP3_WhittedRayTracing.vcxproj -> C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Debug\MP3_WhittedRayTracing.exe

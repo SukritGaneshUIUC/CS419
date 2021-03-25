@@ -1,0 +1,15 @@
+﻿  TriangleMesh.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(241,24): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(241,33): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(241,75): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(241,84): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  World.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(241,24): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(241,33): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(241,75): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(241,84): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(249,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  Generating Code...
+  MP3_WhittedRayTracing.vcxproj -> C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\x64\Debug\MP3_WhittedRayTracing.exe
