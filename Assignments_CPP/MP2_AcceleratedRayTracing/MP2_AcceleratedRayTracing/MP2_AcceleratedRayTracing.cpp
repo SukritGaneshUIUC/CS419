@@ -183,7 +183,7 @@ void sphereTest(int sphereCount=10) {
 
     world.addLightSource(std::shared_ptr<LightSource>(new PointLightSource(Point3D(-12, 20, 2), WHITE_COLOR, WHITE_COLOR)));
 
-    world.addRenderOption(RenderOption::BVH);
+    //world.addRenderOption(RenderOption::BVH);
 
     // RENDER
     std::cout << "Rendering ...\n" << std::endl;
