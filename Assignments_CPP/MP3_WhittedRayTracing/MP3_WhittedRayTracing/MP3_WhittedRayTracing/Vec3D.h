@@ -43,8 +43,10 @@ public:
 
 	void capValuesMax(const double(&arr)[3]);
 	void capValuesMin(const double(&arr)[3]);
+	bool nearZero();
 
 	Vec3D elementMultiply(const Vec3D& other) const;
+	Vec3D reflect(const Vec3D& normal) const;
 
 	// VECTOR ONLY METHODS
 
@@ -72,6 +74,8 @@ public:
 using Point3D = Vec3D;
 using ColorRGB = Vec3D;
 
+constexpr double VEC_EPSILON = 10.0e-8;
+
 constexpr int RGB_MAX = 255;
 constexpr double RGB_MIN = 0.1;
 
@@ -83,4 +87,5 @@ const ColorRGB BLUE_COLOR({ RGB_MIN,RGB_MIN,RGB_MAX });
 const ColorRGB YELLOW_COLOR({ RGB_MAX,RGB_MAX,RGB_MIN });
 const ColorRGB ORANGE_COLOR({ RGB_MAX, 165, RGB_MIN });
 const ColorRGB PINK_COLOR({ RGB_MAX, 192, 203 });
+const ColorRGB GRAY_COLOR({ 192, 192, 192 });
 

@@ -213,7 +213,7 @@ namespace Arithmetic {
         }
     }
 
-    // find barycentric coordinates of triangle
+    // find barycentric coordinates of a point
     static void barycentric(const Point3D& p, const Point3D& a, const Point3D& b, const Point3D& c, double& u, double& v, double& w)
     {
         Vec3D v0 = b - a;
@@ -230,6 +230,12 @@ namespace Arithmetic {
         u = 1.0f - v - w;
     }
 
+    // find point from barycentric coordinates
+    static void reverse_barycentric(const Point3D& a, const Point3D& b, const Point3D& c, const double& u, const double& v, const double& w, Point3D& p)
+    {
+        p = a * u + b * v + c * w;
+    }
+
     // generate a random Vec3D
     static Vec3D randomVec3D(const Vec3D& min, const Vec3D& max) {
         //std::default_random_engine generator;
@@ -244,6 +250,12 @@ namespace Arithmetic {
         return randomVec;
     }
 
+    // generate a random unit Vec3D
+    static Vec3D randomUnitVec3D() {
+        Vec3D randomVec = randomVec3D(Vec3D(0, 0, 0), Vec3D(1, 1, 1));
+        return randomVec.get_normalized();
+    }
+
     inline int random_double(double min, double max) {
         // Returns a random double in [min,max].
         return min + doubleDistribution(generator) * (max - min);
@@ -252,6 +264,22 @@ namespace Arithmetic {
     inline int random_int(int min, int max) {
         // Returns a random integer in [min,max].
         return static_cast<int>(random_double(min, max + 1));
+    }
+
+    // generates a bunch of random points on a triangle
+    static void generateTriangleSamplePoints(const Point3D& a, const Point3D& b, const Point3D& c, const int& pointCount, std::vector<Point3D>& samplePoints) {
+        for (size_t i = 0; i < pointCount; i++) {
+            double u = doubleDistribution(generator);
+            double v = doubleDistribution(generator);
+            double w = doubleDistribution(generator);
+            u /= (u + v + w);
+            v /= (u + v + w);
+            w /= (u + v + w);
+
+            Point3D randPt;
+            reverse_barycentric(a, b, c, u, v, w, randPt);
+            samplePoints.push_back(randPt);
+        }
     }
 
 };

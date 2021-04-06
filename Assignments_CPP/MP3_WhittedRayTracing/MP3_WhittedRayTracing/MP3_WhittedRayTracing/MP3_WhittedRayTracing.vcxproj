@@ -139,40 +139,42 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AxisAlignedBoundingBox.cpp" />
-    <ClCompile Include="BVHNode.cpp" />
+    <ClCompile Include="AreaLightSource.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="HitRecord.cpp" />
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="Lambertian.cpp" />
     <ClCompile Include="Mat4.cpp" />
     <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Mirror.cpp" />
     <ClCompile Include="MP3_WhittedRayTracing.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="PointLightSource.cpp" />
     <ClCompile Include="Ray3D.cpp" />
+    <ClCompile Include="SolidMaterial.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Triangle.cpp" />
-    <ClCompile Include="TriangleMesh.cpp" />
     <ClCompile Include="Vec3D.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AreaLightSource.h" />
     <ClInclude Include="Arithmetic.h" />
-    <ClInclude Include="AxisAlignedBoundingBox.h" />
-    <ClInclude Include="BVHNode.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="HitRecord.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="Lambertian.h" />
     <ClInclude Include="Mat4.h" />
     <ClInclude Include="Material.h" />
-    <ClInclude Include="Model.h" />
+    <ClInclude Include="Mirror.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLightSource.h" />
     <ClInclude Include="Ray3D.h" />
+    <ClInclude Include="SolidMaterial.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Triangle.h" />
-    <ClInclude Include="TriangleMesh.h" />
     <ClInclude Include="Vec3D.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

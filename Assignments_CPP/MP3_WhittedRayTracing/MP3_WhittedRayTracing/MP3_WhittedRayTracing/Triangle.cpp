@@ -6,7 +6,7 @@
 * @param v The vertices of the Triangle
 * @param material The Material of the Triangle
 */
-Triangle::Triangle(const Point3D(&v)[3], const Material& material) : Object(ObjectType::Triangle, material)
+Triangle::Triangle(const Point3D(&v)[3], const std::shared_ptr<Material>& material, const ObjectType& objectType) : Object(objectType, material)
 {
 	vertices[0] = v[0];
 	vertices[1] = v[1];
@@ -17,8 +17,6 @@ Triangle::Triangle(const Point3D(&v)[3], const Material& material) : Object(Obje
 	normals[0] = B.crossProduct(A);
 	normals[0].normalize();
 
-	meshTriangle = false;
-
 	Point3D minPoint;
 	Point3D maxPoint;
 
@@ -27,45 +25,6 @@ Triangle::Triangle(const Point3D(&v)[3], const Material& material) : Object(Obje
 		maxPoint[i] = std::max(vertices[0][i], std::max(vertices[1][i], vertices[2][i]));
 	}
 
-	boundingBox = AABB3D();
-	boundingBox.min() = minPoint;
-	boundingBox.max() = maxPoint;
-}
-
-/*
-* Constructor for Triangle (on mesh, given 3 vertex normals)
-*
-* @param v The vertices of the Triangle
-* @param n The normals of the vertices of the Triangle (from mesh)
-* @param material The Material of the Triangle
-*/
-Triangle::Triangle(const Point3D(&v)[3], const Vec3D(&n)[3], const Material& material) : Object(ObjectType::Triangle, material)
-{
-	vertices[0] = v[0];
-	vertices[1] = v[1];
-	vertices[2] = v[2];
-
-	normals[0] = n[0];
-	normals[1] = n[1];
-	normals[2] = n[2];
-
-	//normals[0] = n[0].get_normalized();
-	//normals[1] = n[1].get_normalized();
-	//normals[2] = n[2].get_normalized();
-
-	meshTriangle = true;
-
-	Point3D minPoint;
-	Point3D maxPoint;
-
-	for (int i = 0; i < 3; i++) {
-		minPoint[i] = std::min(vertices[0][i], std::min(vertices[1][i], vertices[2][i]));
-		maxPoint[i] = std::max(vertices[0][i], std::max(vertices[1][i], vertices[2][i]));
-	}
-
-	boundingBox = AABB3D();
-	boundingBox.min() = minPoint;
-	boundingBox.max() = maxPoint;
 }
 
 /*
@@ -124,7 +83,12 @@ int Triangle::intersection(const Ray3D& ray, const double& t_min, const double& 
 		if (intT < t_min || intT > t_max) {
 			return 0;
 		}
-		hitRecord = HitRecord(intT, intPoint, this->normal(intPoint), getMaterial());
+		hitRecord.intersected = true;
+		hitRecord.intT = intT;
+		hitRecord.intPoint = intPoint;
+		hitRecord.setFaceNormal(ray, normal(intPoint));
+		hitRecord.material = getMaterial();
+
 		return 1;
 	}
 	return 0;
@@ -132,7 +96,6 @@ int Triangle::intersection(const Ray3D& ray, const double& t_min, const double& 
 
 /*
 * Get the normal vector of the object at a specified intersection point
-* May use face or barycentric normal
 *
 * @param intersection The intersection point
 *
@@ -140,27 +103,7 @@ int Triangle::intersection(const Ray3D& ray, const double& t_min, const double& 
 */
 Vec3D Triangle::normal(const Point3D& intersection) const
 {
-	if (!meshTriangle) {
-		return normals[0];
-	}
-	double u, v, w;
-	Arithmetic::barycentric(intersection, vertices[0], vertices[1], vertices[2], u, v, w);
-	Vec3D weightedNormal{ (normals[0] * u) + (normals[1] * v) + (normals[2] * w) };
-	weightedNormal.normalize();
-	//std::cout << "tn: " << weightedNormal.toString() << std::endl;
-	return weightedNormal;
-
-}
-
-/*
-* Generates an axis-aligned bounding box for the object
-*
-* @param bb An AABB3D to hold the axis-aligned bounding box of the object. Modified by functions.
-*/
-bool Triangle::generateBoundingBox(AABB3D& bb) const
-{
-	bb = boundingBox;
-	return true;
+	return normals[0];
 }
 
 /*

@@ -289,6 +289,16 @@ void Vec3D::capValuesMin(const double(&arr)[3])
 }
 
 /*
+* Checks if the Vec3D is a zero vector
+* 
+* @return true if all elements of the vector are 0 += 10e-8, false otherwise.
+*/
+bool Vec3D::nearZero()
+{
+	return (abs(x()) < VEC_EPSILON) && (abs(y()) < VEC_EPSILON) && (abs(z()) < VEC_EPSILON);
+}
+
+/*
 * Perform element-wise multiplication on this Vec3D with another Vec3D
 *
 * @param other The other Vec3D
@@ -298,6 +308,18 @@ void Vec3D::capValuesMin(const double(&arr)[3])
 Vec3D Vec3D::elementMultiply(const Vec3D& other) const
 {
 	return Vec3D(x() * other.x(), y() * other.y(), z() * other.z());
+}
+
+/*
+* Calculates the reflection vector (across the other vector)
+* 
+* @param other The other vector
+* 
+* @return this vector reflected across other
+*/
+Vec3D Vec3D::reflect(const Vec3D& other) const
+{
+	return (*this) - (other * (((*this).dotProduct(other)) * 2));
 }
 
 /*

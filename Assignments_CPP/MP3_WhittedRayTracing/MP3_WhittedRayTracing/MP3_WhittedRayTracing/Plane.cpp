@@ -7,7 +7,7 @@
 * @param normal The normal vector of the Plane
 * @param material The Material of the Plane
 */
-Plane::Plane(const Point3D& point, const Vec3D& normal, const Material& material) : Object(ObjectType::Plane, material), point(point), normal_vector(normal) {
+Plane::Plane(const Point3D& point, const Vec3D& normal, const std::shared_ptr<Material>& material) : Object(ObjectType::Plane, material), point(point), normal_vector(normal) {
 	(this->normal_vector).normalize();
 }
 
@@ -46,7 +46,11 @@ int Plane::intersection(const Ray3D& ray, const double& t_min, const double& t_m
 		if (intT < t_min || intT > t_max) {
 			return 0;
 		}
-		hitRecord = HitRecord(intT, intPoint, this->normal(intPoint), getMaterial());
+		hitRecord.intersected = true;
+		hitRecord.intT = intT;
+		hitRecord.intPoint = intPoint;
+		hitRecord.setFaceNormal(ray, normal(intPoint));
+		hitRecord.material = getMaterial();
 		return 1;
 	}
 	return 0;
@@ -63,11 +67,4 @@ int Plane::intersection(const Ray3D& ray, const double& t_min, const double& t_m
 Vec3D Plane::normal(const Point3D& intersection) const
 {
 	return normal_vector;
-}
-
-// NOT APPLICABLE
-
-bool Plane::generateBoundingBox(AABB3D& bb) const
-{
-	return false;
 }

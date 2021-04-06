@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Vec3D.h"
+#include "Ray3D.h"
+#include "HitRecord.h"
+#include "Arithmetic.h"
 
 const ColorRGB DEFAULT_COLOR = WHITE_COLOR;
 
@@ -10,6 +13,12 @@ const ColorRGB DEFAULT_SPECULAR = WHITE_COLOR;
 
 const double DEFAULT_ALPHA = 15.0;
 
+const double DEFAULT_REFLECTIVITY = 1.0;
+
+enum class MaterialType {REFLECTIVE, SOLID, TRANSLUCENT};
+
+struct HitRecord;
+
 class Material
 {
 public:
@@ -17,7 +26,10 @@ public:
 	ColorRGB diffuse;
 	ColorRGB specular;
 	double alpha;
+	MaterialType materialType;
 
-	Material(const ColorRGB& ambient = PINK_COLOR, const ColorRGB& diffuse = PINK_COLOR, const ColorRGB& specular = WHITE_COLOR, const double& alpha = DEFAULT_ALPHA);
+	Material(const ColorRGB& ambient = PINK_COLOR, const ColorRGB& diffuse = PINK_COLOR, const ColorRGB& specular = WHITE_COLOR, const double& alpha = DEFAULT_ALPHA, const MaterialType& materialType = MaterialType::SOLID);
+
+	virtual bool scatter(const Ray3D& ray, const HitRecord& hitRecord, ColorRGB& attenuation, Ray3D& scattered) const;
 };
 

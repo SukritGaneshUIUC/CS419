@@ -10,13 +10,9 @@
 * @param specular The specular color of the Sphere
 * @param alpha The alpha factor of the Sphere
 */
-Sphere::Sphere(const Point3D& center, const double& radius, const Material& material) : Object(ObjectType::Sphere, material), center(center), radius(radius) {
+Sphere::Sphere(const Point3D& center, const double& radius, const std::shared_ptr<Material>& material) : Object(ObjectType::Sphere, material), center(center), radius(radius) {
 	Point3D minPoint(center[0] - radius, center[1] - radius, center[2] - radius);
 	Point3D maxPoint(center[0] + radius, center[1] + radius, center[2] + radius);
-
-	boundingBox = AABB3D();
-	boundingBox.min() = minPoint;
-	boundingBox.max() = maxPoint;
 }
 
 /*
@@ -73,7 +69,13 @@ int Sphere::intersection(const Ray3D& ray, const double& t_min, const double& t_
 	}
 	double intT = *(std::min_element(sols.begin(), sols.end()));
 	Point3D intPoint = ray.pos(intT);
-	hitRecord = HitRecord(intT, intPoint, this->normal(intPoint), getMaterial());
+
+	hitRecord.intersected = true;
+	hitRecord.intT = intT;
+	hitRecord.intPoint = intPoint;
+	hitRecord.setFaceNormal(ray, normal(intPoint));
+	hitRecord.material = getMaterial();
+
 	return 1;
 }
 
@@ -87,15 +89,4 @@ int Sphere::intersection(const Ray3D& ray, const double& t_min, const double& t_
 Vec3D Sphere::normal(const Point3D& intersection) const
 {
 	return (intersection - center).get_normalized();
-}
-
-/*
-* Generates an axis-aligned bounding box for the object
-*
-* @param bb An AABB3D to hold the axis-aligned bounding box of the object. Modified by functions.
-*/
-bool Sphere::generateBoundingBox(AABB3D& bb) const
-{
-	bb = boundingBox;
-	return true;
 }

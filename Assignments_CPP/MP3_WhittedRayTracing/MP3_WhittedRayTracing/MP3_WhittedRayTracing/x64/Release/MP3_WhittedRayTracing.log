@@ -1,7 +1,26 @@
-﻿  Material.cpp
+﻿  MP3_WhittedRayTracing.cpp
+  The contents of <filesystem> are available only with C++17 or later.
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(247,24): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(247,33): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(247,75): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(247,84): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(261,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Material.h(20,17): warning C4099: 'HitRecord': type name first seen using 'class' now seen using 'struct'
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\HitRecord.h(9): message : see declaration of 'HitRecord'
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  World.cpp
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(247,24): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(247,33): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(247,75): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(247,84): warning C4267: 'argument': conversion from 'size_t' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Arithmetic.h(261,20): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Material.h(20,17): warning C4099: 'HitRecord': type name first seen using 'class' now seen using 'struct'
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\HitRecord.h(9): message : see declaration of 'HitRecord'
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\Camera.h(20,28): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\MP3_WhittedRayTracing\World.cpp(269,38): warning C4244: 'argument': conversion from 'unsigned __int64' to 'const double', possible loss of data
   Generating code
-  238 of 1419 functions (16.8%) were compiled, the rest were copied from previous compilation.
-    23 functions were new in current compilation
+  3 of 1064 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
     35 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   MP3_WhittedRayTracing.vcxproj -> C:\Users\Sukrit Ganesh\Documents\UIUC_Material\Semester4\CS419\Assignments_CPP\MP3_WhittedRayTracing\MP3_WhittedRayTracing\x64\Release\MP3_WhittedRayTracing.exe

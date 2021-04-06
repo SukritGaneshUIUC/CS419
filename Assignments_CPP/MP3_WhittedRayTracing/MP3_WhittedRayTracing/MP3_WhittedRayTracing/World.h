@@ -14,10 +14,9 @@
 #include "Ray3D.h"
 #include "Image.h"
 #include "Camera.h"
-#include "BVHNode.h"
 
 #include "PointLightSource.h"
-#include "TriangleMesh.h"
+#include "AreaLightSource.h"
 
 enum class RenderOption { ANTI_ALIASING, BVH, TRIANGLE_MESH };
 
@@ -29,22 +28,19 @@ class World
 {
 private:
 	std::vector<std::shared_ptr<Object>> sceneObjects;
-	std::vector<std::shared_ptr<Object>> lightSources;
-	std::shared_ptr<TriangleMesh> triangleMesh;
+	std::shared_ptr<AreaLightSource> lightSource;
 	std::vector<RenderOption> renderOptions;
 	Image backgroundImage;
 	Camera camera;
 	ColorRGB ambientLight;
 
-	BVHNode root;
 
 public:
 	World();
 	~World();
 
 	const std::vector<std::shared_ptr<Object>>& getSceneObjects() const;
-	const std::vector<std::shared_ptr<Object>>& getLightSources() const;
-	const std::shared_ptr<TriangleMesh>& getTriangleMesh() const;
+	const std::shared_ptr<AreaLightSource> getLightSource() const;
 	const std::vector<RenderOption>& getRenderOptions() const;
 	const Image& getBackgroundImage();
 	const Camera& getCamera() const;
@@ -52,25 +48,20 @@ public:
 	const ColorRGB& getAmbientLight();
 
 	bool OPT_ANTI_ALIASING() const;
-	bool OPT_BVH() const;
 	bool OPT_TRIANGLE_MESH() const;
 
 	void addSceneObject(std::shared_ptr<Object> sceneObject);
-	void addLightSource(std::shared_ptr<Object> lightSource);
-	void setTriangleMesh(const std::shared_ptr<TriangleMesh>& triangleMesh);
+	void addLightSource(std::shared_ptr<AreaLightSource> lightSource);
 	void addRenderOption(const RenderOption& renderOption);
 	void setBackgroundImage(Image&& image);
 	void setCamera(const Camera& camera);
 	void setAmbientLight(const ColorRGB& ambientLight);
 
-	// Ray Tracing Helper Methods
-	AABB3D surroundingBox(const AABB3D& box0, const AABB3D& box1) const;
-	bool surroundingBox(const std::vector<std::shared_ptr<Object>>& objects, AABB3D& bb) const;
-
 	// Ray Tracing Main Methods
-	bool shootPrimaryRay(const int& currentRow, const int& currentColumn, const double& xOffset, const double& yOffset, Ray3D& firstRay, HitRecord& hitRecord);
-	void determineColor(const int& currentRow, const int& currentColumn, bool intersected, const Ray3D& firstRay, HitRecord& hitRecord, ColorRGB& pixelColor);
+	bool shootRay(const Ray3D& firstRay, HitRecord& hitRecord);
+	void blinnPhongShading(const Ray3D& ray, const HitRecord& hitRecord, ColorRGB& pixelColor);
 
-	ColorRGB rayTrace(const int& currentRow, const int& currentColumn, const double& xOffset, const double& yOffset);
+	ColorRGB rayTracerHelper(const Ray3D& currRay, double depth);
+	ColorRGB rayTracer(const int& currentRow, const int& currentColumn, const double& xOffset, const double& yOffset);
 	Image render();
 };

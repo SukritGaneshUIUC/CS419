@@ -1,5 +1,5 @@
 #include "World.h"
-#include "BVHNode.h"
+#include "Mirror.h"
 
 /*
 * Default constructor for World
@@ -20,21 +20,12 @@ const std::vector<std::shared_ptr<Object>>& World::getSceneObjects() const
 }
 
 /*
-* @return A reference to the vector of all light source Objects in the World
+* @return A reference to the world's light source
 */
-const std::vector<std::shared_ptr<Object>>& World::getLightSources() const
+const std::shared_ptr<AreaLightSource> World::getLightSource() const
 {
-	return lightSources;
+	return lightSource;
 }
-
-/*
-* @return A reference to the triangleMesh
-*/
-const std::shared_ptr<TriangleMesh>& World::getTriangleMesh() const
-{
-	return triangleMesh;
-}
-
 
 /*
 * @return A reference to the vector of all RenderOption in the World
@@ -56,17 +47,9 @@ void World::addSceneObject(std::shared_ptr<Object> sceneObject)
 /*
 * @param lightSource The light source Object to add to the world
 */
-void World::addLightSource(std::shared_ptr<Object> lightSource)
+void World::addLightSource(std::shared_ptr<AreaLightSource> lightSource)
 {
-	lightSources.push_back(lightSource);
-}
-
-/*
-* @param triangleMesh The TriangleMesh to add to the world
-*/
-void World::setTriangleMesh(const std::shared_ptr<TriangleMesh>& triangleMesh)
-{
-	this->triangleMesh = triangleMesh;
+	this->lightSource = lightSource;
 }
 
 /*
@@ -112,14 +95,6 @@ bool World::OPT_ANTI_ALIASING() const
 }
 
 /*
-* @return bool Checks whether the user selected BVH as a RenderOption
-*/
-bool World::OPT_BVH() const
-{
-	return std::find(renderOptions.begin(), renderOptions.end(), RenderOption::BVH) != renderOptions.end();
-}
-
-/*
 * @return bool Checks whether the user selected TRIANGLE_MESH as a RenderOption
 */
 bool World::OPT_TRIANGLE_MESH() const
@@ -160,105 +135,39 @@ const ColorRGB& World::getAmbientLight()
 }
 
 /*
-* Generates a bounding box which surrounds two given bounding boxes
+* Determines what objects a ray intersects..
 *
-* @param box0 The first bounding box
-* @param box1 The second bounding box
-*
-* @return A bounding box surrounding box0 and box1
-*/
-AABB3D World::surroundingBox(const AABB3D& box0, const AABB3D& box1) const
-{
-	Point3D small(fmin(box0.min().x(), box1.min().x()),
-		fmin(box0.min().y(), box1.min().y()),
-		fmin(box0.min().z(), box1.min().z()));
-
-	Point3D big(fmax(box0.max().x(), box1.max().x()),
-		fmax(box0.max().y(), box1.max().y()),
-		fmax(box0.max().z(), box1.max().z()));
-
-	return AABB3D(small, big);
-}
-
-/*
-* Generates a bounding box which surrounds ALL given objects
-*
-* @param objects The list of Objects.
-* @param bb The bounding box surrounding all Objects. Modified by function.
-*
-* @return A bounding box surrounding all Objects in objects.
-*/
-bool World::surroundingBox(const std::vector<std::shared_ptr<Object>>& objects, AABB3D& bb) const
-{
-	// No bounding box if list is empty, return false
-	if (objects.empty()) return false;
-
-	// Iterate over all objects in the list, find the major bounding box
-	// Planes don't have a bounding box, so they will be skipped
-	AABB3D temp_box;
-	bool first_box = true;
-	size_t count = 0;
-
-	for (const auto& objectPtr : objects) {
-		Object* currObject = objectPtr.get();
-		if (currObject->generateBoundingBox(temp_box)) continue;
-		bb = first_box ? temp_box : surroundingBox(bb, temp_box);
-		first_box = false;
-		count++;
-	}
-
-	// If no objects with bounding boxes were encountered, return false
-	if (count == 0) {
-		return false;
-	}
-
-	return true;
-}
-
-/*
-* Shoots a ray from the origin through the view plane, then determines which objects it hits.
-* In a more advanced implementation, this ray will "reflect off" and "pass through" surfaces, meaning there will be multiple intersection points.
-*
-* @param currentRow The row of the pixel.
-* @param currentColumn The column the pixel.
-* @param xOffset The horizontal offset of the ray destination.
-* @param yOffset The vertical offset of the ray destination.
-* @param firstRay The initial ray shot by the ray tracer. Modified by function.
+* @param firstRay The ray to trace.
 * @param hitRecord HitRecord struct holding intersection information (if any). Modified by function.
 *
 * @return Whether or not the ray hit any objects
 */
-bool World::shootPrimaryRay(const int& currentRow, const int& currentColumn, const double& xOffset, const double& yOffset, Ray3D& firstRay, HitRecord& hitRecord)
+bool World::shootRay(const Ray3D& firstRay, HitRecord& hitRecord)
 {
-	// Direction vector from world camera position to current point on view window
-	Point3D firstRayStart;
-	Vec3D firstRayDirection;
-	camera.getRay(currentRow, currentColumn, xOffset, yOffset, firstRayStart, firstRayDirection);
-
-	// First Ray: From Camera out into the world ...
-	firstRay = Ray3D{ firstRayStart, firstRayDirection };
-
 	// finds the index of the SceneObject in the iterable closest to the start of the ray
 	double minT = 0;
 	double minDist = 0;
 	bool intersected = false;
 
-	if (OPT_TRIANGLE_MESH() || OPT_BVH()) {
-		return root.intersection(firstRay, 0, MAX_T, hitRecord);
+	// Just do the usual ...
+	for (int i = 0; i < sceneObjects.size(); i++) {
+		if (intersected) {
+			sceneObjects[i]->intersection(firstRay, 0, hitRecord.intT, hitRecord);
+		}
+		else {
+			intersected = sceneObjects[i]->intersection(firstRay, 0, MAX_T, hitRecord);
+		}
 	}
 
-	// Otherwise, just do the usual ...
-	for (int i = 0; i < sceneObjects.size(); i++) {
-		HitRecord currHitRecord;
-		const std::shared_ptr<Object>& currSceneObject = sceneObjects[i];
-		bool currIntersected = currSceneObject->intersection(firstRay, 0, MAX_T, currHitRecord);
-		if (currIntersected) {
-			if (!intersected || currHitRecord.intT < minT) {
-				hitRecord = currHitRecord;
-				minT = currHitRecord.intT;
-			}
-			intersected = true;
-		}
+	bool lightIntersected = false;
+	if (intersected) {
+		lightIntersected = lightSource->intersection(firstRay, 0, hitRecord.intT, hitRecord);
+	}
+	else {
+		lightIntersected = lightSource->intersection(firstRay, 0, MAX_T, hitRecord);
+	}
+	if (lightIntersected) {
+		hitRecord.lightSource = true;
 	}
 
 	return intersected;
@@ -267,96 +176,129 @@ bool World::shootPrimaryRay(const int& currentRow, const int& currentColumn, con
 /*
 * Determines the color of the selected pixel. Occurs AFTER primary ray-tracing has been performed.
 *
-* @param currentRow The row of the pixel.
-* @param currentColumn The column the pixel.
-* @param intersected The number of intersection points encountered by the primary ray.
-* @param firstRay The primary ray.
-* @param hitRecord HitRecord struct holding intersection information (if any).
+* @param ray The ray.
+* @param hitRecord HitRecord struct holding intersection information.
 * @param pixelColor A Point3D which will hold the color of the current pixel. Modified by function.
 */
-void World::determineColor(const int& currentRow, const int& currentColumn, bool intersected, const Ray3D& firstRay, HitRecord& hitRecord, ColorRGB& pixelColor)
+void World::blinnPhongShading(const Ray3D& ray, const HitRecord& hitRecord, ColorRGB& pixelColor)
 {
 	// Just return the background image color if no intersections detected
-	if (!intersected) {
-		pixelColor = backgroundImage.get(currentRow, currentColumn);
+	if (!hitRecord.intersected) {
+		pixelColor = backgroundImage.get(0, 0);
 		return;
 	}
 
-	// Otherwise, determine color at pixel
-	const Point3D& lightRayStart = hitRecord.intPoint;
-	bool shadow = false;
+	// Just return the light color if the ray has hit the light
+	if (hitRecord.lightSource) {
+		pixelColor = lightSource->getMaterial()->diffuse;
+		return;
+	}
 
-	// Color Part 1: Ambient Term
-	ColorRGB ambientComponent = (hitRecord.material.ambient / 255).elementMultiply(ambientLight / 255);
+	// Iterate over all sample points on the area light source!!!
+	std::vector<Point3D> samplePoints = lightSource->getSamplePoints();
+	ColorRGB runningColorSum{ 0,0,0 };
 
-	// Color Part 2, 3: Diffuse and Specular Terms
-	// Iterate over all objects to check for shadow
+	for (size_t i = 0; i < samplePoints.size(); i++) {
 
-	ColorRGB diffuseComponent = BLACK_COLOR / 255;
-	ColorRGB specularComponent = BLACK_COLOR / 255;
-	for (int i = 0; i < lightSources.size(); i++) {
-		const std::shared_ptr<PointLightSource>& currLightSource = std::dynamic_pointer_cast<PointLightSource>(lightSources[i]);
-		const Point3D currentLightPoint = currLightSource->getLightPoint();
-		const Ray3D lightRay{ lightRayStart, currentLightPoint - lightRayStart };
+		const Point3D currLightPoint = samplePoints[i];
+		const Point3D& lightRayStart = hitRecord.intPoint;
+		ColorRGB currColor{ 0,0,0 };
+		ColorRGB diffuseComponent = BLACK_COLOR / 255;
+		ColorRGB specularComponent = BLACK_COLOR / 255;
+		const Ray3D lightRay{ lightRayStart, currLightPoint - lightRayStart };
+
+		// Color Part 1: Ambient Term
+		ColorRGB ambientComponent = (hitRecord.material->ambient / 255).elementMultiply(ambientLight / 255);
+
+		// Color Part 2, 3: Diffuse and Specular Terms
+		// Iterate over all objects to check for shadow
 
 		// Iterate over all objects for the current light source to find shadow
-		if (OPT_BVH() || OPT_TRIANGLE_MESH()) {
-			const double t_max_shadow = lightRay.getT(currentLightPoint);
+		bool shadow = false;
+		double maxShadowT = lightRay.getT(currLightPoint);
+		for (int j = 0; j < sceneObjects.size(); j++) {
+
+			// intersection happens ONLY IF the intersection point happens BEFORE the ray reaches the light source
 			HitRecord shadowHitRecord;
-			if (root.intersection(lightRay, 0, t_max_shadow, shadowHitRecord)) {
+			bool currShadow = sceneObjects[j]->intersection(lightRay, 0, maxShadowT, shadowHitRecord);
+			if (currShadow) {
 				shadow = true;
 				break;
 			}
 		}
-		else {
-			for (int j = 0; j < sceneObjects.size(); j++) {
-				const std::shared_ptr<Object> currSceneObject = sceneObjects[j];
-				HitRecord currLightHitRecord;
-				bool currShadow = currSceneObject->intersection(lightRay, 0, MAX_T, currLightHitRecord);
 
-				// intersection happens ONLY IF the intersection point happens BEFORE the ray reaches the light source
-				if (currShadow && lightRayStart.distanceTo(currLightHitRecord.intPoint) < lightRayStart.distanceTo(currentLightPoint)) {
-					shadow = true;
-					diffuseComponent = BLACK_COLOR / 255;
-					specularComponent = BLACK_COLOR / 255;
-					break;
-				}
-				// otherwise, apply phong reflection model
-			}
-			if (shadow) {
-				break;
-			}
+		if (shadow) {
+			currColor = ambientComponent;
+			currColor.capValuesMax({ 1, 1, 1 });
+			currColor *= RGB_MAX;
+			runningColorSum += currColor;
+			continue;
 		}
 
 		// If no shadow, apply phong reflection model
 
 		// Color Part 2: Diffuse
 		Vec3D N = hitRecord.normal;
-		Vec3D L = currentLightPoint - hitRecord.intPoint;
+		Vec3D L = currLightPoint - hitRecord.intPoint;
 		N.normalize();
 		L.normalize();
-		Vec3D kd = hitRecord.material.diffuse / 255;
-		Vec3D id = currLightSource->getMaterial().diffuse / 255;
+		Vec3D kd = hitRecord.material->diffuse / 255;
+		Vec3D id = lightSource->getMaterial()->diffuse / 255;
 		ColorRGB currentDiffuseTerm = (kd.elementMultiply(id)) * std::max((L.dotProduct(N)), 0.0);
 		diffuseComponent += currentDiffuseTerm;
 
 		// Color Part 3: Specular (Blinn-Phong)
-		Vec3D D = hitRecord.intPoint - currentLightPoint;
+		Vec3D D = hitRecord.intPoint - currLightPoint;
 		D.normalize();
-		Vec3D V = firstRay.getStart() - hitRecord.intPoint;
+		Vec3D V = ray.getStart() - hitRecord.intPoint;
 		V.normalize();
 		Vec3D H = L + V;
 		H.normalize();
-		Vec3D ks = hitRecord.material.specular / 255;
-		Vec3D is = currLightSource->getMaterial().specular / 255;
-		const double& alpha = hitRecord.material.alpha;
+		Vec3D ks = hitRecord.material->specular / 255;
+		Vec3D is = lightSource->getMaterial()->specular / 255;
+		const double& alpha = hitRecord.material->alpha;
 		ColorRGB currentSpecularTerm = (ks.elementMultiply(is)) * (pow(std::max((N.dotProduct(H)), 0.0), alpha));
 		specularComponent += currentSpecularTerm;
+
+		currColor = ambientComponent + diffuseComponent + specularComponent;
+		currColor.capValuesMax({ 1, 1, 1 });
+		currColor *= RGB_MAX;
+		runningColorSum += currColor;
 	}
 
-	pixelColor = ambientComponent + diffuseComponent + specularComponent;
-	pixelColor.capValuesMax({ 1, 1, 1 });
-	pixelColor *= RGB_MAX;
+	runningColorSum /= samplePoints.size();
+	pixelColor = runningColorSum;
+}
+
+ColorRGB World::rayTracerHelper(const Ray3D& ray, double depth) {
+	// Intersect the ray with all objects (including light)
+	HitRecord hitRecord;
+	shootRay(ray, hitRecord);
+
+	// Run blinn-phong
+	ColorRGB blinnPhongComponent;
+	blinnPhongShading(ray, hitRecord, blinnPhongComponent);
+
+	// Just return blinn-phong color under these conditions
+	if (depth == 0 || hitRecord.intersected == false || hitRecord.material->materialType == MaterialType::SOLID) {
+		return blinnPhongComponent;
+	}
+
+	// Deal with mirror rays
+	else if (hitRecord.material->materialType == MaterialType::REFLECTIVE) {
+		std::shared_ptr<Mirror> m = std::dynamic_pointer_cast<Mirror>(hitRecord.material);
+		Vec3D reflectionVector{ ray.getDirection().reflect(hitRecord.normal) };
+		Ray3D reflectionRay{ hitRecord.intPoint, reflectionVector };
+		ColorRGB reflectionComponent = rayTracerHelper(reflectionRay, depth - 1);
+		//return (reflectionComponent * m->reflectivity) + (blinnPhongComponent * (1 - m->reflectivity));
+		return reflectionComponent * 0.9 + blinnPhongComponent * 0.1;
+
+	}
+
+	// Everything else ...
+	else {
+		return WHITE_COLOR;
+	}
 }
 
 /*
@@ -371,19 +313,16 @@ void World::determineColor(const int& currentRow, const int& currentColumn, bool
 * @return The color derived by the current ray
 *
 */
-ColorRGB World::rayTrace(const int& currentRow, const int& currentColumn, const double& xOffset, const double& yOffset)
+ColorRGB World::rayTracer(const int& currentRow, const int& currentColumn, const double& xOffset, const double& yOffset)
 {
+	// First Ray: From Camera out into the world ...
+	Point3D firstRayStart;
+	Vec3D firstRayDirection;
+	camera.getRay(currentRow, currentColumn, xOffset, yOffset, firstRayStart, firstRayDirection);
+	Ray3D firstRay{ firstRayStart, firstRayDirection };
 
-	// Step 0: Shoot the primary ray and determine any intersection points
-	Ray3D firstRay;
-	HitRecord hitRecord;
-	Point3D intPoint;
-	bool intersected = shootPrimaryRay(currentRow, currentColumn, xOffset, yOffset, firstRay, hitRecord);
-
-	// Step 1: Determine the color of the pixel
-	ColorRGB pixelColor;
-	determineColor(currentRow, currentColumn, intersected, firstRay, hitRecord, pixelColor);
-
+	// Run the recursive ray tracer with the first ray
+	ColorRGB pixelColor = rayTracerHelper(firstRay, 1);
 	return pixelColor;
 }
 
@@ -396,7 +335,6 @@ Image World::render()
 {
 	// Preliminary setup
 	std::cout << "Total Scene Objects: " << sceneObjects.size() << std::endl;
-	std::cout << "Total Light Sources: " << lightSources.size() << std::endl;
 
 	int rows = camera.getViewWindowRows();
 	int cols = camera.getViewWindowCols();
@@ -410,29 +348,6 @@ Image World::render()
 
 	// Record Start time
 	auto start_time = std::chrono::high_resolution_clock::now();
-
-	// Preliminary: Prepare BVH Tree
-	clock_t start;
-	start = clock();
-
-	if (OPT_TRIANGLE_MESH()) {
-		std::cout << std::endl << "Building BVH from TriangleMesh..." << std::endl;
-		root = BVHNode(triangleMesh);
-	}
-	else if (OPT_BVH()) {
-		std::cout << std::endl << "Building BVH from sceneObjects..." << std::endl;
-		root = BVHNode(sceneObjects);
-	}
-
-	// Record BVH time (if applicable)
-	double bvh_seconds = 0;
-	auto bvh_finish_time = clock();
-	if (OPT_TRIANGLE_MESH() || OPT_BVH()) {
-		bvh_seconds = ((double)(bvh_finish_time - start)) / ((double)(CLOCKS_PER_SEC));
-		std::cout << "Done building BVH! Took " << bvh_seconds << " seconds." << std::endl << std::endl;
-	}
-
-	std::cout << std::endl;
 
 	// Iterate over all pixels, perform ray tracing on each
 	for (int i = 0; i < rows; i++) {
@@ -448,7 +363,7 @@ Image World::render()
 			}
 			std::vector<ColorRGB> colors;
 			for (std::pair<double, double> o : offsets) {
-				colors.push_back(rayTrace(i, j, o.first, o.second));
+				colors.push_back(rayTracer(i, j, o.first, o.second));
 			}
 
 			// Take average of all colors for current pixel
@@ -463,18 +378,8 @@ Image World::render()
 	std::cout << "Rendering ... " << blockCount << "% done" << std::endl;
 
 	// Record Ending times
-	double ray_tracing_seconds = 0;
 	auto render_finish_time = clock();
-	ray_tracing_seconds = ((double)(render_finish_time - bvh_finish_time)) / ((double)(CLOCKS_PER_SEC));
-
-	double total_render_seconds = ray_tracing_seconds;
-
-	std::cout << "Statistics:" << std::endl;
-	if (OPT_TRIANGLE_MESH() || OPT_BVH()) {
-		std::cout << "BVH Construction Time: " << bvh_seconds << " seconds." << std::endl;
-		total_render_seconds += bvh_seconds;
-	}
-	std::cout << "Ray Tracing Time: " << ray_tracing_seconds << " seconds." << std::endl;
+	double total_render_seconds = ((double)(render_finish_time)) / ((double)(CLOCKS_PER_SEC));
 	std::cout << "Total Render Time: " << total_render_seconds << " seconds." << std::endl << std::endl;
 
 	// Return rendered image

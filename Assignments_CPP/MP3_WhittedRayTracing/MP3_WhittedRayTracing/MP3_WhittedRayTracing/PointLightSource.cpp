@@ -6,7 +6,7 @@
 * @param position The position of the PointLightSource
 * @param material The material of the PointLightSource
 */
-PointLightSource::PointLightSource(const Point3D& position, const Material& material) : Object(ObjectType::PointLightSource, material), position(position) {}
+PointLightSource::PointLightSource(const Point3D& position, const std::shared_ptr<Material>& material) : Object(ObjectType::PointLightSource, material), position(position) {}
 
 /*
 * @return The position of the PointLightSource
@@ -34,7 +34,11 @@ int PointLightSource::intersection(const Ray3D& ray, const double& t_min, const 
         if (intT < t_min || intT > t_max) {
             return 0;
         }
-        hitRecord = HitRecord(intT, intPoint, (position - ray.getStart()).get_normalized(), getMaterial());
+        hitRecord.intersected = true;
+        hitRecord.intT = intT;
+        hitRecord.intPoint = intPoint;
+        hitRecord.setFaceNormal(ray, normal(intPoint));
+        hitRecord.material = getMaterial();
         return 1;
     }
     return 0;
@@ -61,9 +65,4 @@ Vec3D PointLightSource::normal(const Point3D& intersection) const
 Point3D PointLightSource::getLightPoint() const
 {
     return position;
-}
-
-bool PointLightSource::generateBoundingBox(AABB3D& bb) const
-{
-    return false;
 }
