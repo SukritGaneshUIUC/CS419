@@ -282,4 +282,24 @@ namespace Arithmetic {
         }
     }
 
+    // calculates a refraction ray
+    // credit to scratchapixel: https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
+    static int refract(const Vec3D& I, const Vec3D& N, const double& ior,  Vec3D& T)
+    {
+        double cosi = std::clamp(-1.0, 1.0, I.dotProduct(N));
+        double etai = 1, etat = ior;
+        Vec3D n = N;
+        if (cosi < 0) { cosi = -cosi; }
+        else { std::swap(etai, etat); n = N * -1; }
+        float eta = etai / etat;
+        float k = 1 - eta * eta * (1 - cosi * cosi);
+        if (k < 0) {
+            return 0;
+        }
+        else {
+            T = I * eta + n * (eta * cosi - sqrtf(k));
+            return 1;
+        }
+    }
+
 };

@@ -130,6 +130,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="AreaLightSource.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Dielectric.cpp" />
     <ClCompile Include="HitRecord.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Lambertian.cpp" />
@@ -162,6 +164,7 @@
     <ClInclude Include="AreaLightSource.h" />
     <ClInclude Include="Arithmetic.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Dielectric.h" />
     <ClInclude Include="HitRecord.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Lambertian.h" />

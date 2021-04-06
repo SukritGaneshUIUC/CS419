@@ -7,6 +7,7 @@
 #include "World.h"
 #include "SolidMaterial.h"
 #include "Mirror.h"
+#include "Dielectric.h"
 
 #define PI 3.14159265
 
@@ -191,10 +192,53 @@ void reflectionTest() {
     im.writeToFile(filepath);
 }
 
+void dielectricTest() {
+    // SETUP WORLD
+    World world;
+    int rows = 500;
+    int cols = 500;
+    double width = 2.0;  // higher value = zoom out, lower value = zoom in
+
+    Camera camera;
+    camera.setPosition({ 0,0,0 });
+    camera.setViewWindowPosition(Point3D(0, 0, -1));
+    camera.setUpVector(Vec3D(0, 1, 0));
+    camera.setViewWindowRows(rows);
+    camera.setViewWindowCols(cols);
+    camera.setPixelSize(width / rows);
+    camera.setProjectionType(ProjectionType::PERSPECTIVE);
+    camera.setWorldPosition({ 0,0,0 });
+    world.setCamera(camera);
+
+    Image backgroundImage{ rows, cols, ColorRGB(255, 219, 247) };
+    world.setBackgroundImage(std::move(backgroundImage));
+    world.setAmbientLight(WHITE_COLOR * 0.2);
+
+    // BUILD WORLD
+
+    world.addSceneObject(std::shared_ptr<Object>(new Plane({ 0,0,-15 }, { 0,0,1 }, std::make_shared<Material>(SolidMaterial(BLUE_COLOR, BLUE_COLOR, WHITE_COLOR)))));
+    world.addSceneObject(std::shared_ptr<Object>(new Plane({ 0,-2,0 }, { 0,1,0 }, std::make_shared<Material>(SolidMaterial(YELLOW_COLOR, YELLOW_COLOR, WHITE_COLOR)))));
+    world.addSceneObject(std::shared_ptr<Object>(new Plane({ 0,0,25 }, { 0,0,-1 }, std::make_shared<Material>(SolidMaterial(ORANGE_COLOR, ORANGE_COLOR, WHITE_COLOR)))));
+    world.addSceneObject(std::shared_ptr<Object>(new Triangle({ Point3D{ -7, -2, -9 }, Point3D{1, -2, -7}, Point3D{1, 4, -7} }, std::make_shared<Material>(Mirror()))));
+    world.addSceneObject(std::shared_ptr<Object>(new Triangle({ Point3D{ -7, -2, -8 }, Point3D{-4, -2, -6.5}, Point3D{-4, 2, -6.5} }, std::make_shared<Material>(SolidMaterial(PINK_COLOR, PINK_COLOR, WHITE_COLOR)))));
+    world.addSceneObject(std::shared_ptr<Object>(new Triangle({ Point3D{ -1, -2, -4 }, Point3D{1, -2, -4}, Point3D{0, -2, -6} }, std::make_shared<Material>(SolidMaterial(RED_COLOR, RED_COLOR, WHITE_COLOR)))));
+    world.addSceneObject(std::shared_ptr<Object>(new Sphere(Point3D(0, -0.5, -5), 1.5, std::make_shared<Material>(Dielectric(PINK_COLOR, PINK_COLOR)))));
+
+    world.addLightSource(std::shared_ptr<AreaLightSource>(new AreaLightSource({ Point3D(-12, 20, 2), Point3D(-10, 20, 2), Point3D(-12, 22, 1) }, std::make_shared<Material>(SolidMaterial(WHITE_COLOR, WHITE_COLOR, WHITE_COLOR)))));
+
+    // RENDER
+    std::cout << "Rendering ..." << std::endl;
+    Image im{ world.render() };
+    std::cout << "Done rendering ..." << std::endl;
+    std::string filepath = "dielectric_test.ppm";
+    im.writeToFile(filepath);
+}
+
 int main()
 {
     //testBench();
     //perspectiveTest();
-    //areaLightTest();
-    reflectionTest();
+    areaLightTest();
+    //reflectionTest();
+    //dielectricTest();
 }

@@ -1,5 +1,6 @@
 #include "World.h"
 #include "Mirror.h"
+#include "Dielectric.h"
 
 /*
 * Default constructor for World
@@ -271,6 +272,8 @@ void World::blinnPhongShading(const Ray3D& ray, const HitRecord& hitRecord, Colo
 }
 
 ColorRGB World::rayTracerHelper(const Ray3D& ray, double depth) {
+	rays_shot++;
+
 	// Intersect the ray with all objects (including light)
 	HitRecord hitRecord;
 	shootRay(ray, hitRecord);
@@ -284,15 +287,37 @@ ColorRGB World::rayTracerHelper(const Ray3D& ray, double depth) {
 		return blinnPhongComponent;
 	}
 
-	// Deal with mirror rays
+	// Deal with reflective surfaces
 	else if (hitRecord.material->materialType == MaterialType::REFLECTIVE) {
 		std::shared_ptr<Mirror> m = std::dynamic_pointer_cast<Mirror>(hitRecord.material);
 		Vec3D reflectionVector{ ray.getDirection().reflect(hitRecord.normal) };
 		Ray3D reflectionRay{ hitRecord.intPoint, reflectionVector };
 		ColorRGB reflectionComponent = rayTracerHelper(reflectionRay, depth - 1);
 		//return (reflectionComponent * m->reflectivity) + (blinnPhongComponent * (1 - m->reflectivity));
-		return reflectionComponent * 0.9 + blinnPhongComponent * 0.1;
+		return reflectionComponent * DEFAULT_REFLECTIVITY + blinnPhongComponent * (1.0 - DEFAULT_REFLECTIVITY);
 
+	}
+
+	// Deal with dielectric surfaces
+	else if (hitRecord.material->materialType == MaterialType::DIELECTRIC) {
+		std::shared_ptr<Dielectric> d = std::dynamic_pointer_cast<Dielectric>(hitRecord.material);
+		Vec3D refractionVector;
+		int refret = 0;
+		if (hitRecord.front_face) {
+			refret = Arithmetic::refract(ray.getDirection(), hitRecord.normal, DEFAULT_REFRACTIVE_INDEX, refractionVector);
+		}
+		else {
+			refret = Arithmetic::refract(ray.getDirection(), hitRecord.normal * -1, 1.0 / DEFAULT_REFRACTIVE_INDEX, refractionVector);
+		}
+
+		// do refraction if total internal reflection doesn't happen, just do blinn phong otherwise
+		if (refret) {
+			Ray3D refractionRay{ hitRecord.intPoint, refractionVector };
+			ColorRGB refractionComponent = rayTracerHelper(refractionRay, depth - 1);
+			return refractionComponent * DEFAULT_TRANSMISSION_COEFFICIENT + blinnPhongComponent * (1.0 - DEFAULT_TRANSMISSION_COEFFICIENT);
+		}
+		return blinnPhongComponent;
+		
 	}
 
 	// Everything else ...
@@ -322,7 +347,7 @@ ColorRGB World::rayTracer(const int& currentRow, const int& currentColumn, const
 	Ray3D firstRay{ firstRayStart, firstRayDirection };
 
 	// Run the recursive ray tracer with the first ray
-	ColorRGB pixelColor = rayTracerHelper(firstRay, 1);
+	ColorRGB pixelColor = rayTracerHelper(firstRay, 10);
 	return pixelColor;
 }
 
@@ -334,6 +359,7 @@ ColorRGB World::rayTracer(const int& currentRow, const int& currentColumn, const
 Image World::render()
 {
 	// Preliminary setup
+	rays_shot = 0;
 	std::cout << "Total Scene Objects: " << sceneObjects.size() << std::endl;
 
 	int rows = camera.getViewWindowRows();
@@ -381,6 +407,7 @@ Image World::render()
 	auto render_finish_time = clock();
 	double total_render_seconds = ((double)(render_finish_time)) / ((double)(CLOCKS_PER_SEC));
 	std::cout << "Total Render Time: " << total_render_seconds << " seconds." << std::endl << std::endl;
+	std::cout << "Rays Shot: " << rays_shot << std::endl;
 
 	// Return rendered image
 	return rm;

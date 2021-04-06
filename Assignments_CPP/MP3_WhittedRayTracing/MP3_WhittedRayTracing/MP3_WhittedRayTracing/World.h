@@ -34,7 +34,7 @@ private:
 	Camera camera;
 	ColorRGB ambientLight;
 
-
+	size_t rays_shot;
 public:
 	World();
 	~World();
